@@ -2,158 +2,181 @@
 <!-- Copyright(C) 2018 duangsuse
 alldream.html is a standalone web fortend tool for viewing alldream workshare platform worklist
 Licensed under LGPLv3 -->
-<html lang="zh-cn">
-  <head>
-    <title>AllDream 傲梦展览墙</title>
-    <meta charset="utf-8">
-    <meta name="description" content="欣赏 4k+ 个中国孩子的神奇作品">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="renderer" content="webkit">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta property="og:site_name" content="傲梦编程 BigWall">
-    <meta property="og:title" content="傲梦编程 BigWall">
-    <meta property="og:description" content="欣赏 4k+ 个孩子的神奇作品">
-    <meta name="theme-color" content="#2196F3">
-    <!-- MDUI <3 duangsuse -->
-    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/css/mdui.min.css">
-    <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
-    <script src="http://danml.com/js/download.js"></script>
-    <script>
-      var $$ = mdui.JQ;
-      localStorage['page'] = localStorage['page'] || 25
-      localStorage['cate'] = localStorage['cate'] || 'scratch'
-      function s(set) { localStorage['cate'] = set; $$('#title')[0].text = "作品目录" + "（" + set + "）" }
-    </script>
-  </head>
+<html lang="zh-cn" dir="ltr">
 
-  <body class="mdui-theme-primary-blue mdui-theme-accent-pink">
-    <div class="mdui-appbar">
-        <div class="mdui-toolbar mdui-color-theme">
-            <a id="title" class="mdui-typo-title" mdui-tooltip="{content: '显示作品计数'}">作品目录</a>
-            <div class="mdui-toolbar-spacer"></div>
-            <a onclick="if (pageNum > 1) { pageNum--; mdui.snackbar('后退一页：' + pageNum) } else { mdui.snackbar('到第一页了') }" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '后退一页'}"><i class="mdui-icon material-icons">arrow_back</i></a>
-            <a id="pagnum" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '每页面显示条数'}"><i class="mdui-icon material-icons">featured_play_list</i></a>
-            <a class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#set-category'}" mdui-tooltip="{content: '分类'}"><i class="mdui-icon material-icons">folder</i></a>
-            <a id="refresh" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '刷新'}"><i class="mdui-icon material-icons">refresh</i></a>
-        </div>
+<head>
+  <title>AllDream 傲梦展览墙</title>
+  <meta charset="utf-8">
+  <meta name="description" content="欣赏 4k+ 个中国孩子的神奇作品">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta property="og:site_name" content="傲梦编程 BigWall">
+  <meta property="og:title" content="傲梦编程 BigWall">
+  <meta property="og:description" content="欣赏 4k+ 个孩子的神奇作品">
+  <meta name="theme-color" content="#2196F3">
+  <!-- MDUI <3 duangsuse -->
+  <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/css/mdui.min.css">
+  <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
+  <script src="https://cdnjs.loli.net/ajax/libs/downloadjs/1.4.8/download.js"></script>
+  <script>
+    var $$ = mdui.JQ;
+    localStorage['page'] = localStorage['page'] || 25
+    localStorage['cate'] = localStorage['cate'] || 'scratch'
+    function s(set) { localStorage['cate'] = set; $$('#title')[0].text = "作品目录" + "（" + set + "）" }
+  </script>
+</head>
+
+<body class="mdui-theme-primary-blue mdui-theme-accent-pink">
+  <div class="mdui-appbar">
+    <div class="mdui-toolbar mdui-color-theme">
+      <a id="title" class="mdui-typo-title" mdui-tooltip="{content: '显示作品计数'}">作品目录</a>
+      <div class="mdui-toolbar-spacer"></div>
+      <a onclick="if (pageNum > 1) { pageNum--; mdui.snackbar('后退一页：' + pageNum) } else { mdui.snackbar('到第一页了') }" class="mdui-btn mdui-btn-icon"
+        mdui-tooltip="{content: '后退一页'}">
+        <i class="mdui-icon material-icons">arrow_back</i>
+      </a>
+      <a id="pagnum" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '每页面显示条数'}">
+        <i class="mdui-icon material-icons">featured_play_list</i>
+      </a>
+      <a class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#set-category'}" mdui-tooltip="{content: '分类'}">
+        <i class="mdui-icon material-icons">folder</i>
+      </a>
+      <a id="refresh" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '刷新'}">
+        <i class="mdui-icon material-icons">refresh</i>
+      </a>
     </div>
+  </div>
 
-    <script>
-      function mapSid(name) {
-        if (name == 'scratch')
-          return 1
-        else if (name == 'turtle')
-          return 2
-        else if (name == 'mindmap')
-          return 0
-        else if (name == 'recommended')
-          return 6
-        else
-          return 1
-      }
-      function rlist(page, fun) {
-        var size = localStorage['page']
-        var cate = localStorage['cate']
-        var api = 'https://all-dream.com/rest/share/list'
-        start_time = new Date()
-        console.log("Grabbing list at " + start_time)
-        $$.ajax({
-            method: 'POST',
-            url: api,
-            data: {
-                rows: size,
-                shareType: mapSid(cate),
-                bigType: cate == 'all' ? 3 : 1
-            },
-            success: function(data) {
-                fun(JSON.parse(data));
-                end_time = new Date()
-                console.log("Finished at " + end_time + " in " + (end_time - start_time) + "ms (size is " + localStorage['page'] + ")")
-            }
-        });
-      }
+  <script>
+    function mapSid(name) {
+      if (name == 'scratch')
+        return 1
+      else if (name == 'turtle')
+        return 2
+      else if (name == 'mindmap')
+        return 0
+      else if (name == 'recommended')
+        return 6
+      else
+        return 1
+    }
 
-      $$('#pagnum')[0].onclick = function() {
-        var old_num = localStorage['page']
-        var ok = function(t, d) {
-            var n = Number(t)
-            if (n != 0) {
-                localStorage['page'] = n
-                mdui.snackbar("你设置了新每页项目数：" + n, { buttonText: 'undo', onButtonClick: function(){ localStorage['page'] = old_num }})
-            } else { mdui.snackbar("不能设置为 0，请不要填为空") }
+    function rlist(page, fun) {
+      var size = localStorage['page']
+      var cate = localStorage['cate']
+      var api = 'https://all-dream.com/rest/share/list'
+      start_time = new Date()
+      console.log("Grabbing list at " + start_time)
+      $$.ajax({
+        method: 'POST',
+        url: api,
+        data: {
+          rows: size,
+          shareType: mapSid(cate),
+          bigType: cate == 'all' ? 3 : 1,
+          page: pageNum
+        },
+        success: function (data) {
+          fun(JSON.parse(data));
+          end_time = new Date()
+          console.log("Finished at " + end_time + " in " + (end_time - start_time) + "ms (size is " + localStorage['page'] + ")")
         }
-        var cancel = function(t, d) {
-            d.close()
+      });
+    }
+
+    $$('#pagnum')[0].onclick = function () {
+      var old_num = localStorage['page']
+      var ok = function (t, d) {
+        var n = Number(t)
+        if (n != 0) {
+          localStorage['page'] = n
+          mdui.snackbar("你设置了新每页项目数：" + n, { buttonText: 'undo', onButtonClick: function () { localStorage['page'] = old_num } })
+        } else { mdui.snackbar("不能设置为 0，请不要填为空") }
+      }
+      var cancel = function (t, d) {
+        d.close()
+      }
+      mdui.prompt("请输入每页显示项目数（当前 " + localStorage['page'] + " 项/页）", ok, cancel, null)
+    }
+
+    $$('#title')[0].onclick = function () {
+      $$.ajax({
+        method: 'POST',
+        url: 'https://all-dream.com/rest/share/queryCount',
+        success: function (data) {
+          var obj = JSON.parse(data)
+          mdui.alert("总共有 " + obj['total'] + " 个作品，其中 Scaratch " + obj['SB2Count'] + " 个，TJS " + obj['JSCount'] + " 个，思维导图 " + obj['mindMappingCount'] + "个，推荐" + obj['promote'] + " 个");
         }
-        mdui.prompt("请输入每页显示项目数（当前 " + localStorage['page'] + " 项/页）", ok, cancel, null)
-      }
+      });
+    }
 
-      $$('#title')[0].onclick = function() {
-        $$.ajax({
-            method: 'POST',
-            url: 'https://all-dream.com/rest/share/queryCount',
-            success: function (data) {
-                obj = JSON.parse(data)
-                mdui.alert("总共有 " + obj['total'] + " 个作品，其中 Scaratch " + obj['SB2Count'] + " 个，TJS " + obj['JSCount'] + " 个，思维导图 " + obj['mindMappingCount'] + "个，推荐" + obj['promote'] + " 个");
-            }
-        });
-      }
-
-      var pageNum = 1
-      var json_attrs = ["id", "userId", "userType", "shareType", "coverUrl", "fileUrl", "shareTitle", "visit", "star", "shareContent", "note", "state", "bigType", "createTime", "updateTime", "name", "phone", "sex", "type", "score", "inventory", "setting", "gold", "promote", "sort", "liked", "postUrl", "grade", "area", "stuId", "courseTypeName", "courseHourId", "totalDay", "totalCount"]
+    pageNum = 1
+    bin = []
+    $$('#refresh')[0].onclick = function () {
       bin = []
-      $$('#refresh')[0].onclick = function() {
-        bin = []
-        rlist(pageNum, function(d) {
-            buf = ""
-            for (var k in d['list']) {
-              var v = d['list'][k]
-              // console.log(v)
-              bin[k] = v
-              item = fill('https://all-dream.com/' + v['coverUrl'], v['courseTypeName'] + ' - ' + v['name'] + '（' + v['grade'] + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'], v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k  + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')")
-              buf += wrap(item)
-            }
-            setlist(buf)
-        });
-      }
-    </script>
+      var grab_snack = mdui.snackbar("正在从远端获取列表...")
+      // Angry! 为啥我不知道怎么定义局部变量
+      var start_time2 = new Date()
+      rlist(pageNum, function (d) {
+        grab_snack.close()
+        mdui.snackbar("成功从远端获得列表，用时 " + (new Date() - start_time2) / 1000 + " 秒")
+        var buf = ""
+        for (var k in d['list']) {
+          var v = d['list'][k]
+          // console.log(v)
+          bin[k] = v
+          item = fill('https://all-dream.com/' + v['coverUrl'], v['courseTypeName'] + ' - ' + v['name'] + '（' + v['grade'] + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + new Date(v['createTime']).toString().replace('GMT+0800 (CST)', ''), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')")
+          buf += wrap(item)
+        }
+        setlist(buf)
+      });
+    }
+  </script>
 
-    <script>
-      var template = '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple">下载</button><button onclick="@a2@" class="mdui-btn mdui-ripple">原数据</button></div></div>'
-      function fill(img, title, subt, desc, a1, a2) {
-        return template.replace('@img@', img)
-                .replace('@title@', title)
-                .replace('@subtitle@', subt)
-                .replace('@desc@', desc)
-                .replace('@a1@', a1)
-                .replace('@a2@', a2);
-      }
-      function setlist(t) {
-        list.innerHTML = t
-      }
-      function wrap(h) {
-        return '<div class="mdui-col"><div class="mdui-grid-tile">' + h + '</div></div>'
-      }
-    </script>
+  <script>
+    var template = '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-btn-raised"><i class="mdui-icon mdui-icon-left material-icons">file_download</i> 下载</button><button onclick="@a2@" class="mdui-btn mdui-btn-raised mdui-ripple"><i class="mdui-icon mdui-icon-left material-icons">info_outline</i> 原数据</button></div></div>'
+    function fill(img, title, subt, desc, a1, a2) {
+      return template.replace('@img@', img)
+        .replace('@title@', title)
+        .replace('@subtitle@', subt)
+        .replace('@desc@', desc)
+        .replace('@a1@', a1)
+        .replace('@a2@', a2);
+    }
+    function setlist(t) {
+      list.innerHTML = t
+    }
+    function wrap(h) {
+      return '<div class="mdui-col"><div class="mdui-grid-tile mdui-shadow-5">' + h + '</div></div>'
+    }
+  </script>
 
-    <!-- Main list -->
-    <div id="list" style="padding: 1%;" class="mdui-row-xs-3 mdui-row-sm-4 mdui-row-md-5 mdui-row-lg-6 mdui-row-xl-7 mdui-grid-list"></div>
-    <script>var list = $$('#list')[0]</script>
+  <!-- Main list -->
+  <div class="mdui-container-fluid">
+    <div id="list" style="padding: 4px;" class="mdui-row-xs-3 mdui-row-sm-4 mdui-row-md-5 mdui-row-lg-6 mdui-row-xl-7 mdui-grid-list"></div>
+  </div>
+  <script>var list = $$('#list')[0]</script>
 
-    <button onclick="pageNum++; mdui.snackbar('前进一页：' + pageNum)" class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple"><i class="mdui-icon material-icons">arrow_forward</i></button>
+  <button onclick="pageNum++; mdui.snackbar('前进一页：' + pageNum)" class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple">
+    <i class="mdui-icon material-icons">arrow_forward</i>
+  </button>
 
-    <div class="mdui-dialog" id="set-category">
-        <div class="mdui-dialog-title">请选择要显示的分类</div>
-        <div class="mdui-dialog-content">您可以选择只显示指定类型的项目，包括 <mark>全部、MindMap、Scratch、JS Turtle、推荐</mark></div>
-        <div class="mdui-dialog-actions mdui-dialog-actions-stacked">
-            <button onclick="s('all')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show All | 显示全部</button>
-            <button onclick="s('mindmap')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show Mind-Maps | MindMap</button>
-            <button onclick="s('scratch')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show Scratch Projects | Scratch </button>
-            <button onclick="s('turtle')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show JS Turtle Projects | JS Turtle</button>
-            <button onclick="s('recommended')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Recommended Projects | 推荐项目</button>
-            <button class="mdui-btn mdui-ripple" mdui-dialog-close="">Keep settings, close dialog | 保持现状</button>
-        </div>
+  <div class="mdui-dialog" id="set-category">
+    <div class="mdui-dialog-title">请选择要显示的分类</div>
+    <div class="mdui-dialog-content">您可以选择只显示指定类型的项目，包括
+      <mark>全部、MindMap、Scratch、JS Turtle、推荐</mark>
     </div>
-  </body>
+    <div class="mdui-dialog-actions mdui-dialog-actions-stacked">
+      <button onclick="s('all')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show All | 显示全部</button>
+      <button onclick="s('mindmap')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show Mind-Maps | MindMap</button>
+      <button onclick="s('scratch')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show Scratch Projects | Scratch </button>
+      <button onclick="s('turtle')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show JS Turtle Projects | JS Turtle</button>
+      <button onclick="s('recommended')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Recommended Projects | 推荐项目</button>
+      <button class="mdui-btn mdui-ripple" mdui-dialog-close="">Keep settings, close dialog | 保持现状</button>
+    </div>
+  </div>
+</body>
+
 </html>
