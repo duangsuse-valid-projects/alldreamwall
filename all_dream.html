@@ -93,7 +93,7 @@ Licensed under LGPLv3 -->
         url: api,
         data: {
           rows: size,
-          shareType: mapSid(cate),
+          shareType: cate == 'all' ? null : mapSid(cate),
           bigType: cate == 'all' ? 3 : 1,
           page: pageNum
         },
