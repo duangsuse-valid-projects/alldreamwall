@@ -125,8 +125,8 @@ Licensed under LGPLv3 -->
           case 'date':
             return '<span class="json-markup-string">"' + escape(obj.toISOString()) + '"</span>'
 
-          case 'maybe_date':
-            return '<span class="json-markup-number">' + obj + '</span>' + '<a style="color: #607D8B"> // Maybe date: ' + new Date(obj) + '</a>'
+          case 'maybe_datenum':
+            return '<span class="json-markup-number">' + obj + '</span>' + ',<a style="color: #607D8B"> // Maybe date: ' + tfmt(new Date(obj)) + '</a>'
 
           case 'null':
             return '<span ' + style('json-markup-null') + '>null</span>'
@@ -193,6 +193,7 @@ Licensed under LGPLv3 -->
   </div>
 
   <script>
+    // ShareType ID Processing
     function mapSid(name) {
       if (name == 'scratch')
         return 1
@@ -246,6 +247,7 @@ Licensed under LGPLv3 -->
         cls.remove(MDUI_DARK_CLASS)
     }
 
+    // main list API client
     var api = 'https://all-dream.com/rest/share/list'
     function rlist(page, fun) {
       var size = localStorage['page']
@@ -330,7 +332,7 @@ Licensed under LGPLv3 -->
       });
     }
 
-    // utils
+    // JSON pp based util views
     function uid_view() {
       alert_title.close();
       mdui.prompt("请输入要查询的 UID（Like <em>d21ad8f718264854a4dee4dc4a11badd</em>）", function (t, d) {
@@ -347,13 +349,26 @@ Licensed under LGPLv3 -->
 
     function gem_view() {
       alert_title.close();
-      mdui.snackbar("Work In Progress")
+      // mdui.snackbar("Work In Progress")
+      rlist_billboard(1, function (d) { setlist(ppJson(d)) });
     }
 
     function gold_view() {
       alert_title.close();
-      mdui.snackbar("Work In Progress");
+      // mdui.snackbar("Work In Progress");
+      rlist_billboard(2, function (d) { setlist(ppJson(d)) });
     }
+
+    function slist_view() {
+      alert_title.close();
+      rlist_msg(function (d) { setlist(ppJson(d)) });
+    }
+
+    function mlist_view() {
+      alert_title.close();
+      rlist(pageNum, function (d) { setlist(ppJson(d)) });
+    }
+    // end
 
     $$('#pagnum')[0].onclick = function () {
       var old_num = localStorage['page']
@@ -376,7 +391,7 @@ Licensed under LGPLv3 -->
         url: 'https://all-dream.com/rest/share/queryCount',
         success: function (data) {
           var obj = JSON.parse(data)
-          var toolset = "<p><div class=\"mdui-typo\"><h3>查询小工具：</h3><p>根据 <em>UID</em> 获取用户详细信息 <a onclick=\"uid_view()\">👤</a><p>根据 <em>SID</em> 获取分享信息 <a onclick=\"share_view()\">📄</a><p>查询宝石榜 <a onclick=\"gem_view()\">💎</a><p>查询金币榜 <a onclick=\"gold_view()\">🔑</a><p>这是由 <a href=\"https://t.me/duangsuse\">duangsuse</a> 开发的 <a href=\"https://all-dream.com\">傲梦</a> 分享项目数据查询工具，以 <strong>GNU LGPL-3.0</strong> 共享协议开放源代码<p><small>感谢 <strong>MDUI、download.js、Masonry</strong> 提供的部分特性支持<p>另外，请注意，查询工具作为附属组件，不受技术支持</small></div>"
+          var toolset = "<p><div class=\"mdui-typo\"><h3>查询小工具：</h3><p>根据 <em>UID</em> 获取用户详细信息 <a onclick=\"uid_view()\">👤</a><p>根据 <em>SID</em> 获取分享信息 <a onclick=\"share_view()\">📄</a><p>查询宝石榜 <a onclick=\"gem_view()\">💎</a><p>查询金币榜 <a onclick=\"gold_view()\">🔑</a><p>查询分享消息 <a onclick=\"slist_view()\">🎉</a><p>检查分享列表源代码 <a onclick=\"mlist_view()\">📟</a><p>这是由 <a href=\"https://t.me/duangsuse\">duangsuse</a> 开发的 <a href=\"https://all-dream.com\">傲梦</a> 分享项目数据查询工具，以 <strong>GNU LGPL-3.0</strong> 共享协议开放源代码<p><small>感谢 <strong>MDUI、download.js、Masonry</strong> 提供的部分特性支持<p>另外，请注意，查询工具作为附属组件，不受技术支持</small></div>"
           alert_title = mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个</a>" + toolset);
         }
       });
