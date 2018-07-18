@@ -44,14 +44,14 @@ Licensed under LGPLv3 -->
     <div class="mdui-toolbar mdui-color-theme">
       <a id="title" class="mdui-text-color-white mdui-typo-title" mdui-tooltip="{content: '显示作品计数'}">作品目录</a>
       <div class="mdui-toolbar-spacer"></div>
-      <a onclick="if (pageNum > 1) { pageNum--; mdui.snackbar('后退一页：' + pageNum) } else { mdui.snackbar('到第一页了') }" class="mdui-btn mdui-btn-icon"
-        mdui-tooltip="{content: '后退一页'}">
+      <a id="go-back" onclick="if (pageNum > 1) { pageNum--; mdui.snackbar('后退一页：' + pageNum, { timeout: 500 }) } else { mdui.snackbar('已经到第一页了', { timeout: 700 }) }"
+        class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '后退一页'}">
         <i class="mdui-text-color-white mdui-icon material-icons">arrow_back</i>
       </a>
-      <a id="pagnum" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '每页面显示条数'}">
+      <a id="pagnum" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '每页显示条数'}">
         <i class="mdui-text-color-white mdui-icon material-icons">featured_play_list</i>
       </a>
-      <a class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#set-category'}" mdui-tooltip="{content: '分类'}">
+      <a id="btn-category" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#set-category'}" mdui-tooltip="{content: '分类'}">
         <i class="mdui-text-color-white mdui-icon material-icons">folder</i>
       </a>
       <a id="refresh" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '刷新'}">
@@ -139,9 +139,9 @@ Licensed under LGPLv3 -->
 
     $$('#pagnum')[0].onclick = function () {
       var old_num = localStorage['page']
-      var ok = function (t, d) {
+      pagnum_ok = function (t, d) {
         var n = Number(t)
-        if (n != 0) {
+        if (n != 0 && n != NaN) {
           localStorage['page'] = n
           mdui.snackbar("你设置了新每页项目数：" + n, { buttonText: 'undo', onButtonClick: function () { localStorage['page'] = old_num } })
         } else { mdui.snackbar("不能设置为 0，请不要填为空") }
@@ -149,7 +149,7 @@ Licensed under LGPLv3 -->
       var cancel = function (t, d) {
         d.close()
       }
-      mdui.prompt("请输入每页显示项目数（当前 " + localStorage['page'] + " 项/页）", ok, cancel, null)
+      diag_pagnum = mdui.prompt("请输入每页显示项目数（当前 " + localStorage['page'] + " 项/页）", pagnum_ok, cancel, { confirmOnEnter: true })
     }
 
     $$('#title')[0].onclick = function () {
@@ -158,7 +158,8 @@ Licensed under LGPLv3 -->
         url: 'https://all-dream.com/rest/share/queryCount',
         success: function (data) {
           var obj = JSON.parse(data)
-          mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个</a>");
+          var toolset = "<p><div class=\"mdui-typo\"><h3>查询小工具：</h3><p>根据 <em>UID</em> 获取用户详细信息<p>根据 <em>SID</em> 获取分享信息<p>查询宝石榜<p>查询金币榜<p>这是由 <a href=\"https://t.me/duangsuse\">duangsuse</a> 开发的 <a href=\"https://all-dream.com\">傲梦</a> 分享项目数据查询工具，以 <strong>GNU LGPL-3.0</strong> 共享协议开放源代码<p><small>感谢 <strong>MDUI、download.js、Masonry</strong> 提供的部分特性支持</small></div>"
+          mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个</a>" + toolset);
         }
       });
     }
@@ -178,7 +179,7 @@ Licensed under LGPLv3 -->
           var v = d['list'][k]
           // console.log(v)
           bin[k] = v
-          item = fill('https://all-dream.com/' + v['coverUrl'], v['courseTypeName'] + ' - ' + v['name'] + '（' + v['grade'] + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')")
+          item = fill('https://all-dream.com/' + v['coverUrl'], v['courseTypeName'] == null ? '无课程分类' : v['courseTypeName'] + ' - ' + v['name'] + '（' + v['grade'] + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')")
           buf += wrap(item)
         }
         setlist(buf);
@@ -190,10 +191,45 @@ Licensed under LGPLv3 -->
 
     // auto apply dark style
     autodark();
+
+    // hotkeys
+    function do_refresh() { $$('#refresh').trigger('click') }
+    document.onkeyup = function (k) {
+      // Enter to refresh
+      if (k.code == 'Enter') {
+        if (k.target == $$('body')[0]) {
+          do_refresh();
+        } else {
+          if (typeof diag_pagnum != 'undefined') {
+            // deprecated
+            // diag_pagnum.close();
+            // pagnum_ok();
+          }
+        }
+      }
+
+      // console.log(k.code);
+      switch (k.code) {
+        case 'KeyM':
+          $$('#title').trigger('click');
+          break
+        case 'ArrowRight':
+          $$('.mdui-fab').trigger('click');
+          break
+        case 'ArrowLeft':
+          $$('#go-back').trigger('click');
+          break
+        case 'KeyC':
+          $$('#btn-category').trigger('click');
+          break
+        case 'KeyT':
+          $$('#pagnum').trigger('click');
+      }
+    }
   </script>
 
   <script>
-    var template = '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-btn-raised"><i class="mdui-icon mdui-icon-left material-icons">file_download</i> 下载</button><button onclick="@a2@" class="mdui-btn mdui-btn-raised mdui-ripple"><i class="mdui-icon mdui-icon-left material-icons">info_outline</i> 原数据</button></div></div>'
+    var template = '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-btn-raised"><i class="mdui-icon mdui-icon-left material-icons">file_download</i> 下载</button><button onclick="@a2@" class="mdui-btn mdui-btn-raised mdui-ripple"><i class="mdui-icon mdui-icon-left material-icons">info_outline</i> 源数据</button></div></div>'
     function fill(img, title, subt, desc, a1, a2) {
       return template.replace('@img@', img)
         .replace('@title@', title)
@@ -222,7 +258,7 @@ Licensed under LGPLv3 -->
     }
   </script>
 
-  <button onclick="pageNum++; mdui.snackbar('前进一页：' + pageNum)" class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple">
+  <button onclick="pageNum++; mdui.snackbar('前进一页：' + pageNum, { timeout: 500 })" class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple">
     <i class="mdui-icon material-icons">arrow_forward</i>
   </button>
 
