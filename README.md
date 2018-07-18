@@ -5,7 +5,7 @@
 ## 特性 | Features
 
 + 基本前端配置：已经填写 OpenGraph 标签，含 `favicon` 和 `title`，UA 兼容性，`viewport`、`theme-color`、基于回调函数的异步等
-+ 质感设计：基于 MDUI 开发，支持主题和自动夜间模式（可以读取和自定义 `localStorage` 中的 `dark`、`nightBegin`、`nightEnd`）
++ 质感设计：基于 MDUI 开发，支持主题和自动夜间模式（可以读取和自定义 `localStorage` 中的 `night`、`nightBegin`、`nightEnd`）
 + 瀑布流：基于 Masonry 的自动作品瀑布流，但不支持自动翻页
 + 查看分类：支持几乎所有官方前端支持的模式： __全部、MindMap、Scratch、JS Turtle、推荐__
 + 分页：支持选择每页项目数，默认 25 条，支持撤销
