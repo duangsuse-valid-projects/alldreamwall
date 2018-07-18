@@ -16,6 +16,10 @@ Licensed under LGPLv3 -->
   <meta property="og:title" content="傲梦编程 BigWall">
   <meta property="og:description" content="欣赏 4k+ 个孩子的神奇作品">
   <meta name="theme-color" content="#2196F3">
+  <meta content="index,follow" name="robots">
+  <meta content="telphone=no, email=no" name="format-detection">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" href="https://all-dream.com/favicon.ico">
   <!-- MDUI <3 duangsuse -->
   <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/css/mdui.min.css">
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
@@ -61,6 +65,21 @@ Licensed under LGPLv3 -->
         return 6
       else
         return 1
+    }
+    function getSidLogo(sid) {
+      if (sid == '1')
+        return '🐱'
+      else if (sid == '2')
+        return '🐢'
+      else if (sid == '0')
+        return '🤔'
+      else if (sid == '6')
+        return '🌠'
+      else
+        return '❓'
+    }
+    function tfmt(date) {
+      return date.getFullYear() + " 年 " + (date.getMonth() + 1) + " 月 " + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
     }
 
     function rlist(page, fun) {
@@ -127,7 +146,7 @@ Licensed under LGPLv3 -->
           var v = d['list'][k]
           // console.log(v)
           bin[k] = v
-          item = fill('https://all-dream.com/' + v['coverUrl'], v['courseTypeName'] + ' - ' + v['name'] + '（' + v['grade'] + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + new Date(v['createTime']).toString().replace('GMT+0800 (CST)', '') + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻'), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')")
+          item = fill('https://all-dream.com/' + v['coverUrl'], v['courseTypeName'] + ' - ' + v['name'] + '（' + v['grade'] + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')")
           buf += wrap(item)
         }
         setlist(buf)
