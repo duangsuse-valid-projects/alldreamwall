@@ -114,10 +114,10 @@ Licensed under LGPLv3 -->
         cls.remove(MDUI_DARK_CLASS)
     }
 
+    var api = 'https://all-dream.com/rest/share/list'
     function rlist(page, fun) {
       var size = localStorage['page']
       var cate = localStorage['cate']
-      var api = 'https://all-dream.com/rest/share/list'
       start_time = new Date()
       console.log("Grabbing list at " + start_time)
       $$.ajax({
@@ -137,11 +137,63 @@ Licensed under LGPLv3 -->
       });
     }
 
+    // Error snackbar
+    $$(document).ajaxError(function (event, xhr, options) {
+      // xhr: XMLHttpRequest 对象
+      // options: AJAX 请求的配置参数
+      mdui.snackbar("从远端拉取数据失败：" + xhr.statusText, { timeout: 1000 });
+    });
+
+    // 用来添加 JSON 解码功能的高阶函数
+    function json_decode_chain(func) {
+      return function (json_str) { func(JSON.parse(json_str)) }
+    }
+
+    // type 1 -> gold, 2 -> gem
+    var bill_api = 'https://all-dream.com/rest/shareUserInfo/list'
+    function rlist_billboard(type, fun) {
+      var size = localStorage['page']
+      $$.ajax({
+        method: 'POST',
+        url: bill_api,
+        data: {
+          type: type,
+          rows: size
+        },
+        success: json_decode_chain(fun)
+      });
+    }
+
+    // shared messages
+    var mesg_api = 'https://all-dream.com/rest/shareRecentMessage/list'
+    function rlist_msg(fun) {
+      var size = localStorage['page']
+      $$.ajax({
+        method: 'POST',
+        url: mesg_api,
+        data: {
+          rows: size
+        },
+        success: json_decode_chain(fun)
+      });
+    }
+
+    // query user information
+    // 考虑到 User ID 是不包含特殊符号的哈希值，不需要 escape 了，但实际生产中不建议这么做（XD
+    var uq_api = 'https://all-dream.com/rest/student/info?studentId=xxxx'
+    function ruser(id, fun) {
+      $$.ajax({
+        method: 'POST',
+        url: uq_api.replace('xxxx', id),
+        success: json_decode_chain(fun)
+      });
+    }
+
     $$('#pagnum')[0].onclick = function () {
       var old_num = localStorage['page']
       pagnum_ok = function (t, d) {
         var n = Number(t)
-        if (n != 0 && Number.isNaN(n)) {
+        if (n != 0 && !Number.isNaN(n)) {
           localStorage['page'] = n
           mdui.snackbar("你设置了新每页项目数：" + n, { buttonText: 'undo', onButtonClick: function () { localStorage['page'] = old_num } })
         } else { mdui.snackbar("不能设置为 0，请不要填为空") }
