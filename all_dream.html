@@ -232,7 +232,7 @@ Licensed under LGPLv3 -->
       var dh = new Date();
       var nightBegin = localStorage['nightBegin'] || 19
       var nightEnd = localStorage['nightEnd'] || 6
-      return dh.getHours() >= nightBegin && dh.getHours() <= nightEnd
+      return dh.getHours() >= nightBegin && dh.getHours() <= 24 || dh.getHours() <= nightEnd
     }
 
     MDUI_DARK_CLASS = 'mdui-theme-layout-dark'
@@ -292,7 +292,8 @@ Licensed under LGPLv3 -->
         url: bill_api,
         data: {
           type: type,
-          rows: size
+          rows: size,
+          page: pageNum
         },
         success: json_decode_chain(fun)
       });
@@ -306,7 +307,8 @@ Licensed under LGPLv3 -->
         method: 'POST',
         url: mesg_api,
         data: {
-          rows: size
+          rows: size,
+          page: pageNum
         },
         success: json_decode_chain(fun)
       });
