@@ -81,6 +81,31 @@ Licensed under LGPLv3 -->
     function tfmt(date) {
       return date.getFullYear() + " 年 " + (date.getMonth() + 1) + " 月 " + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
     }
+    // should use dark style from 19:00 to 6:00
+    function shouldApplyDarkStyle() {
+        var conf = localStorage['night']
+        if (conf != null) {
+            if (conf == false.toString())
+                return false;
+            else return true;
+        }
+        var dh = new Date();
+        var nightBegin = localStorage['nightBegin'] || 19
+        var nightEnd = localStorage['nightEnd'] || 6
+        return dh.getHours() >= nightBegin && dh.getHours() <= nightEnd
+    }
+
+    MDUI_DARK_CLASS = 'mdui-theme-layout-dark'
+
+    // call this to apply dark style automatically
+    function autodark() {
+        var body = mdui.JQ('body')[0]
+        var cls = body.classList
+        if (shouldApplyDarkStyle())
+            cls.add(MDUI_DARK_CLASS)
+        else
+            cls.remove(MDUI_DARK_CLASS)
+    }
 
     function rlist(page, fun) {
       var size = localStorage['page']
@@ -151,6 +176,7 @@ Licensed under LGPLv3 -->
         }
         setlist(buf)
       });
+      autodark();
     }
   </script>
 
