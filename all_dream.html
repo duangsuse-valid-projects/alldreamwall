@@ -23,17 +23,24 @@ Licensed under LGPLv3 -->
   <!-- MDUI <3 duangsuse -->
   <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/css/mdui.min.css">
   <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
+  <!-- Community libraries -->
   <script src="https://cdnjs.loli.net/ajax/libs/downloadjs/1.4.8/download.js"></script>
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <script>
     var $$ = mdui.JQ;
     localStorage['page'] = localStorage['page'] || 25
     localStorage['cate'] = localStorage['cate'] || 'scratch'
     function s(set) { localStorage['cate'] = set; $$('#title')[0].text = "作品目录" + "（" + set + "）" }
   </script>
+  <style>
+    .grid-item {
+      width: 294px;
+    }
+  </style>
 </head>
 
 <body class="mdui-theme-primary-blue mdui-theme-accent-pink">
-  <div class="mdui-appbar">
+  <div mdui-headroom="" class="mdui-appbar">
     <div class="mdui-toolbar mdui-color-theme">
       <a id="title" class="mdui-text-color-white mdui-typo-title" mdui-tooltip="{content: '显示作品计数'}">作品目录</a>
       <div class="mdui-toolbar-spacer"></div>
@@ -174,7 +181,9 @@ Licensed under LGPLv3 -->
           item = fill('https://all-dream.com/' + v['coverUrl'], v['courseTypeName'] + ' - ' + v['name'] + '（' + v['grade'] + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')")
           buf += wrap(item)
         }
-        setlist(buf)
+        setlist(buf);
+        $$.showOverlay();
+        $$.throttle(function () { refresh_mash(); $$.hideOverlay(); }, 1000)();
       });
       autodark();
     }
@@ -197,15 +206,21 @@ Licensed under LGPLv3 -->
       list.innerHTML = t
     }
     function wrap(h) {
-      return '<div class="mdui-col"><div class="mdui-grid-tile mdui-shadow-5">' + h + '</div></div>'
+      return '<div class="grid-item mdui-shadow-5 mdui-grid-tile mdui-grid-list">' + h + '</div>'
     }
   </script>
 
   <!-- Main list -->
-  <div class="mdui-container-fluid">
-    <div id="list" style="padding: 4px;" class="mdui-row-xs-3 mdui-row-sm-4 mdui-row-md-5 mdui-row-lg-6 mdui-row-xl-7 mdui-grid-list"></div>
-  </div>
+  <div id="list" style="padding: 10px;" class="grid mdui-container-fluid"></div>
   <script>var list = $$('#list')[0]</script>
+  <script>
+    function refresh_mash() {
+      var msnry = new Masonry(list, {
+        itemSelector: '.grid-item',
+        columnWidth: 30
+      });
+    }
+  </script>
 
   <button onclick="pageNum++; mdui.snackbar('前进一页：' + pageNum)" class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple">
     <i class="mdui-icon material-icons">arrow_forward</i>
