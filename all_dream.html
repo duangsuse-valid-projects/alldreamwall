@@ -83,28 +83,28 @@ Licensed under LGPLv3 -->
     }
     // should use dark style from 19:00 to 6:00
     function shouldApplyDarkStyle() {
-        var conf = localStorage['night']
-        if (conf != null) {
-            if (conf == false.toString())
-                return false;
-            else return true;
-        }
-        var dh = new Date();
-        var nightBegin = localStorage['nightBegin'] || 19
-        var nightEnd = localStorage['nightEnd'] || 6
-        return dh.getHours() >= nightBegin && dh.getHours() <= nightEnd
+      var conf = localStorage['night']
+      if (conf != null) {
+        if (conf == false.toString())
+          return false;
+        else return true;
+      }
+      var dh = new Date();
+      var nightBegin = localStorage['nightBegin'] || 19
+      var nightEnd = localStorage['nightEnd'] || 6
+      return dh.getHours() >= nightBegin && dh.getHours() <= nightEnd
     }
 
     MDUI_DARK_CLASS = 'mdui-theme-layout-dark'
 
     // call this to apply dark style automatically
     function autodark() {
-        var body = mdui.JQ('body')[0]
-        var cls = body.classList
-        if (shouldApplyDarkStyle())
-            cls.add(MDUI_DARK_CLASS)
-        else
-            cls.remove(MDUI_DARK_CLASS)
+      var body = mdui.JQ('body')[0]
+      var cls = body.classList
+      if (shouldApplyDarkStyle())
+        cls.add(MDUI_DARK_CLASS)
+      else
+        cls.remove(MDUI_DARK_CLASS)
     }
 
     function rlist(page, fun) {
@@ -151,7 +151,7 @@ Licensed under LGPLv3 -->
         url: 'https://all-dream.com/rest/share/queryCount',
         success: function (data) {
           var obj = JSON.parse(data)
-          mdui.alert("总共有 " + obj['total'] + " 个作品，其中 Scaratch " + obj['SB2Count'] + " 个，TJS " + obj['JSCount'] + " 个，思维导图 " + obj['mindMappingCount'] + "个，推荐" + obj['promote'] + " 个");
+          mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个</a>");
         }
       });
     }
@@ -178,6 +178,9 @@ Licensed under LGPLv3 -->
       });
       autodark();
     }
+
+    // auto apply dark style
+    autodark();
   </script>
 
   <script>
@@ -210,8 +213,8 @@ Licensed under LGPLv3 -->
 
   <div class="mdui-dialog" id="set-category">
     <div class="mdui-dialog-title">请选择要显示的分类</div>
-    <div class="mdui-dialog-content">您可以选择只显示指定类型的项目，包括
-      <mark>全部、MindMap、Scratch、JS Turtle、推荐</mark>
+    <div class="mdui-dialog-content mdui-typo">您可以选择只显示指定类型的项目，包括
+      <code>全部、MindMap、Scratch、JS Turtle、推荐</code>
     </div>
     <div class="mdui-dialog-actions mdui-dialog-actions-stacked">
       <button onclick="s('all')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show All | 显示全部</button>
