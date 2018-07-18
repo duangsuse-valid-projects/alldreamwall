@@ -14,14 +14,15 @@
 + 查看比官方客户端更多的信息，日期格式化，项目总数统计数据
 + 查看 __用户、分享、宝石/金币榜、分享列表、分享消息__ 的裸 JSON 数据
 + 下载文件和 JSON 裸数据（基于 download.js）
-+ 快捷键，`Enter` for refresh，`<-/->` decreast/increase page no, `m` for count menu, `t` for rows per page, `c` for categories menu
++ 快捷键，`Enter` for refresh，`<-/->` decreast/increase page no., `m` for count menu, `t` for rows per page, `c` for categories menu
++ 支持生成官方前端项目链接
 
 ## 用到的库 | Used libraries
 
 + 界面，MDUI https://mdui.org
 + JSON prettyprint，json-markup https://github.com/mafintosh/json-markup
 + 瀑布流布局，Masonry https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js
-+ 下载文本数据，download.js https://cdnjs.loli.net/ajax/libs/downloadjs/1.4.8/download.js"></
++ 下载文本数据，download.js https://cdnjs.loli.net/ajax/libs/downloadjs/1.4.8/download.js
 
 ## 许可证 | License
 
