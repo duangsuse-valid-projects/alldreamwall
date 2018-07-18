@@ -232,7 +232,7 @@ Licensed under LGPLv3 -->
           var v = d['list'][k]
           // console.log(v)
           bin[k] = v
-          item = fill('https://all-dream.com/' + v['coverUrl'], (v['courseTypeName'] == null ? '无课程分类' : v['courseTypeName']) + ' - ' + v['name'] + '（' + (v['grade'] == null ? '无学级' : v['grade']) + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')", "window.location='" + offical_prefix + "'+bin[" + k + "]['id']")
+          item = fill('https://all-dream.com/' + v['coverUrl'], (v['courseTypeName'] == null ? '无课程分类' : v['courseTypeName']) + ' - ' + v['name'] + '（' + (v['grade'] == null ? '无学级' : v['grade']) + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')", offical_prefix + v['id'])
           buf += wrap(item)
         }
         setlist(buf);
@@ -282,7 +282,7 @@ Licensed under LGPLv3 -->
   </script>
 
   <script>
-    var template = '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-btn-raised"><i class="mdui-icon mdui-icon-left material-icons">file_download</i> 下载</button><button onclick="@a2@" class="mdui-btn mdui-btn-raised mdui-ripple"><i class="mdui-icon mdui-icon-left material-icons">info_outline</i> 源数据</button><button onclick="@a3@" class="mdui-btn mdui-btn-raised mdui-btn-icon mdui-ripple"><i class="mdui-icon material-icons">insert_link</i></button></div></div>'
+    var template = '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-btn-raised"><i class="mdui-icon mdui-icon-left material-icons">file_download</i> 下载</button><button onclick="@a2@" class="mdui-btn mdui-btn-raised mdui-ripple"><i class="mdui-icon mdui-icon-left material-icons">info_outline</i> 源数据</button><a href="@a3@" class="mdui-float-right mdui-btn mdui-btn-raised mdui-btn-icon mdui-ripple"><i class="mdui-icon material-icons">insert_link</i></a></div></div>'
     function fill(img, title, subt, desc, a1, a2, a3) {
       return template.replace('@img@', img)
         .replace('@title@', title)
