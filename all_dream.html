@@ -189,6 +189,40 @@ Licensed under LGPLv3 -->
       });
     }
 
+    var pq_api = 'https://all-dream.com/rest/share/queryById?id=xxxx'
+    function rproj(id, fun) {
+      $$.ajax({
+        method: 'POST',
+        url: pq_api.replace('xxxx', id),
+        success: json_decode_chain(fun)
+      });
+    }
+
+    // utils
+    function uid_view() {
+      alert_title.close();
+      mdui.prompt("请输入要查询的 UID（Like <em>d21ad8f718264854a4dee4dc4a11badd</em>）", function (t, d) {
+        ruser(t, function (d) { setlist(JSON.stringify(d)) });
+      });
+    }
+
+    function share_view() {
+      alert_title.close();
+      mdui.prompt("请输入要查询的 SID（Like <em>bb2de65d43fb4a9e82ce460b7c830d67</em>）", function (t, d) {
+        rproj(t, function (d) { setlist(JSON.stringify(d)) });
+      });
+    }
+
+    function gem_view() {
+      alert_title.close();
+      mdui.snackbar("Work In Progress")
+    }
+
+    function gold_view() {
+      alert_title.close();
+      mdui.snackbar("Work In Progress");
+    }
+
     $$('#pagnum')[0].onclick = function () {
       var old_num = localStorage['page']
       pagnum_ok = function (t, d) {
@@ -210,8 +244,8 @@ Licensed under LGPLv3 -->
         url: 'https://all-dream.com/rest/share/queryCount',
         success: function (data) {
           var obj = JSON.parse(data)
-          var toolset = "<p><div class=\"mdui-typo\"><h3>查询小工具：</h3><p>根据 <em>UID</em> 获取用户详细信息<p>根据 <em>SID</em> 获取分享信息<p>查询宝石榜<p>查询金币榜<p>这是由 <a href=\"https://t.me/duangsuse\">duangsuse</a> 开发的 <a href=\"https://all-dream.com\">傲梦</a> 分享项目数据查询工具，以 <strong>GNU LGPL-3.0</strong> 共享协议开放源代码<p><small>感谢 <strong>MDUI、download.js、Masonry</strong> 提供的部分特性支持</small></div>"
-          mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个</a>" + toolset);
+          var toolset = "<p><div class=\"mdui-typo\"><h3>查询小工具：</h3><p>根据 <em>UID</em> 获取用户详细信息 <a onclick=\"uid_view()\">👤</a><p>根据 <em>SID</em> 获取分享信息 <a onclick=\"share_view()\">📄</a><p>查询宝石榜 <a onclick=\"gem_view()\">💎</a><p>查询金币榜 <a onclick=\"gold_view()\">🔑</a><p>这是由 <a href=\"https://t.me/duangsuse\">duangsuse</a> 开发的 <a href=\"https://all-dream.com\">傲梦</a> 分享项目数据查询工具，以 <strong>GNU LGPL-3.0</strong> 共享协议开放源代码<p><small>感谢 <strong>MDUI、download.js、Masonry</strong> 提供的部分特性支持<p>另外，请注意，查询工具作为附属组件，不受技术支持</small></div>"
+          alert_title = mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个</a>" + toolset);
         }
       });
     }
