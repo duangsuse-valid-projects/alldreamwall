@@ -141,7 +141,7 @@ Licensed under LGPLv3 -->
       var old_num = localStorage['page']
       pagnum_ok = function (t, d) {
         var n = Number(t)
-        if (n != 0 && n != NaN) {
+        if (n != 0 && Number.isNaN(n)) {
           localStorage['page'] = n
           mdui.snackbar("你设置了新每页项目数：" + n, { buttonText: 'undo', onButtonClick: function () { localStorage['page'] = old_num } })
         } else { mdui.snackbar("不能设置为 0，请不要填为空") }
