@@ -127,7 +127,7 @@ Licensed under LGPLv3 -->
           var v = d['list'][k]
           // console.log(v)
           bin[k] = v
-          item = fill('https://all-dream.com/' + v['coverUrl'], v['courseTypeName'] + ' - ' + v['name'] + '（' + v['grade'] + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + new Date(v['createTime']).toString().replace('GMT+0800 (CST)', '') + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + v['promote'] == 1 ? '👍' : '' + (v['sex'] == '1' ? '👦🏻' : '👧🏻'), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')")
+          item = fill('https://all-dream.com/' + v['coverUrl'], v['courseTypeName'] + ' - ' + v['name'] + '（' + v['grade'] + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + new Date(v['createTime']).toString().replace('GMT+0800 (CST)', '') + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻'), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')")
           buf += wrap(item)
         }
         setlist(buf)
