@@ -207,7 +207,7 @@ Licensed under LGPLv3 -->
         
         // Ruby dafa is good
         puts = console.log
-        Array.prototype.each = Array.prototype.forEach
+        // Array.prototype.each = Array.prototype.forEach
     </script>
     <!-- Configure item display size -->
     <style>
@@ -491,7 +491,7 @@ Licensed under LGPLv3 -->
                 url: 'https://all-dream.com/rest/share/queryCount',
                 success: function (data) {
                     var obj = JSON.parse(data)
-                    alert_title = mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个<p><small>你安装有 <code>" + plugins.length + "</code> 个插件，当前在第 " + pageNum + " 页</small></a>" + toolset);
+                    alert_title = mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个<p><small>你安装有 <code>" + plugins.length + "</code> 个插件，当前在第 <code>" + pageNum + "</code> 页</small></a>" + toolset);
                 }
             });
         }
