@@ -772,7 +772,7 @@ Licensed under LGPLv3 -->
         // plugin link text
         // plugin script
 
-        plugins.forEach(dslInterpreter)
+        plugins.forEach(function (p) { dslInterpreter(p.script, DSL_ON_INITIALIZE) })
         // dslInterpreter(p.script, DSL_ON_INITIALIZE)
 
         // URL Param support
