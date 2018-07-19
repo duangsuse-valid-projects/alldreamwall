@@ -5,514 +5,556 @@ Licensed under LGPLv3 -->
 <html lang="zh-cn" dir="ltr">
 
 <head>
-  <title>AllDream 傲梦展览墙</title>
-  <meta charset="utf-8">
-  <meta name="description" content="欣赏 4k+ 个中国孩子的神奇作品">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="Cache-Control" content="no-siteapp">
-  <meta property="og:site_name" content="傲梦编程 BigWall">
-  <meta property="og:title" content="傲梦编程 BigWall">
-  <meta property="og:description" content="欣赏 4k+ 个孩子的神奇作品">
-  <meta name="theme-color" content="#2196F3">
-  <meta content="index,follow" name="robots">
-  <meta content="telphone=no, email=no" name="format-detection">
-  <meta name="format-detection" content="telephone=no">
-  <link rel="icon" href="https://all-dream.com/favicon.ico">
-  <!-- MDUI <3 duangsuse -->
-  <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/css/mdui.min.css">
-  <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
-  <!-- Community libraries -->
-  <script src="https://cdnjs.loli.net/ajax/libs/downloadjs/1.4.8/download.js"></script>
-  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <!-- Basic tags -->
+    <title>AllDream 傲梦展览墙</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
 
-  <!-- Begin MIT Licensed library: mafintosh/json-markup -->
-  <style>
-    .json-markup {
-      line-height: 17px;
-      font-size: 13px;
-      font-family: monospace;
-      white-space: pre;
-    }
+    <!-- OpenGraph & SEO -->
+    <meta name="description" content="欣赏 4k+ 个中国孩子的神奇作品">
+    <link rel="icon" href="https://all-dream.com/favicon.ico">
+    <meta property="og:site_name" content="傲梦编程 BigWall">
+    <meta property="og:title" content="傲梦编程 BigWall">
+    <meta property="og:description" content="欣赏 4k+ 个孩子的神奇作品">
 
-    .json-markup-key {
-      font-weight: bold;
-    }
+    <!-- Useful tags -->
+    <meta name="theme-color" content="#2196F3">
+    <meta content="index,follow" name="robots">
+    <meta content="telphone=no, email=no" name="format-detection">
+    <meta name="format-detection" content="telephone=no">
 
-    .json-markup-bool {
-      color: #FF80AB;
-    }
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
 
-    .json-markup-string {
-      color: #4CAF50;
-    }
+    <!-- MDUI <3 duangsuse -->
+    <link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/css/mdui.min.css">
+    <script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.1/js/mdui.min.js"></script>
+    <!-- Community libraries -->
+    <script src="https://cdnjs.loli.net/ajax/libs/downloadjs/1.4.8/download.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 
-    .json-markup-null {
-      color: #BDBDBD;
-    }
-
-    .json-markup-number {
-      color: #448AFF;
-    }
-  </style>
-  <script>
-    var INDENT = '    '
-
-    function inlineRule(objRule) {
-      var str = ''
-      Object.keys(objRule).forEach(function (rule) {
-        str += rule + ':' + objRule[rule] + ';'
-      })
-      return str
-    }
-
-    function Stylize(styleFile) {
-      function styleClass(cssClass) {
-        return 'class="' + cssClass + '"'
-      }
-
-      function styleInline(cssClass) {
-        return 'style="' + inlineRule(styleFile['.' + cssClass]) + '"'
-      }
-
-      if (!styleFile) return styleClass
-      return styleInline
-    }
-
-    function type(doc) {
-      if (doc === null) return 'null'
-      if (Array.isArray(doc)) return 'array'
-      if (typeof doc === 'string' && /^https?:/.test(doc)) return 'link'
-      if (typeof doc === 'number' && /\(|\)|\d{13}/.test(doc)) return 'maybe_datenum'
-      if (typeof doc === 'object' && typeof doc.toISOString === 'function') return 'date'
-
-      return typeof doc
-    }
-
-    function escape(str) {
-      return str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    }
-
-    function ppJson(doc, styleFile) {
-      var indent = ''
-      var style = Stylize(styleFile)
-
-      var forEach = function (list, start, end, fn) {
-        if (!list.length) return start + ' ' + end
-
-        var out = start + '\n'
-
-        indent += INDENT
-        list.forEach(function (key, i) {
-          out += indent + fn(key) + (i < list.length - 1 ? ',' : '') + '\n'
-        })
-        indent = indent.slice(0, -INDENT.length)
-
-        return out + indent + end
-      }
-
-      function visit(obj) {
-        if (obj === undefined) return ''
-
-        switch (type(obj)) {
-          case 'boolean':
-            return '<span ' + style('json-markup-bool') + '>' + obj + '</span>'
-
-          case 'number':
-            return '<span ' + style('json-markup-number') + '>' + obj + '</span>'
-
-          case 'date':
-            return '<span class="json-markup-string">"' + escape(obj.toISOString()) + '"</span>'
-
-          case 'maybe_datenum':
-            return '<span class="json-markup-number">' + obj + '</span>' + ',<a style="color: #607D8B"> // Maybe date: ' + tfmt(new Date(obj)) + '</a>'
-
-          case 'null':
-            return '<span ' + style('json-markup-null') + '>null</span>'
-
-          case 'string':
-            return '<span ' + style('json-markup-string') + '>"' + escape(obj.replace(/\n/g, '\n' + indent)) + '"</span>'
-
-          case 'link':
-            return '<span ' + style('json-markup-string') + '>"<a href="' + escape(obj) + '">' + escape(obj) + '</a>"</span>'
-
-          case 'array':
-            return forEach(obj, '[', ']', visit)
-
-          case 'object':
-            var keys = Object.keys(obj).filter(function (key) {
-              return obj[key] !== undefined
-            })
-
-            return forEach(keys, '{', '}', function (key) {
-              return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(obj[key])
-            })
+    <!-- Begin MIT Licensed library: mafintosh/json-markup -->
+    <style>
+        .json-markup {
+            line-height: 17px;
+            font-size: 13px;
+            font-family: monospace;
+            white-space: pre;
         }
 
-        return ''
-      }
+        .json-markup-key {
+            font-weight: bold;
+        }
 
-      return '<div ' + style('json-markup') + '>' + visit(doc) + '</div>'
-    }
-  </script>
-  <!-- end -->
+        .json-markup-bool {
+            color: #FF80AB;
+        }
 
-  <script>
-    var $$ = mdui.JQ;
-    localStorage['page'] = localStorage['page'] || 25
-    localStorage['cate'] = localStorage['cate'] || 'scratch'
-    function s(set) { localStorage['cate'] = set; $$('#title')[0].text = "作品目录" + "（" + set + "）" }
-  </script>
-  <style>
-    .grid-item {
-      width: 294px;
-    }
-  </style>
+        .json-markup-string {
+            color: #4CAF50;
+        }
+
+        .json-markup-null {
+            color: #BDBDBD;
+        }
+
+        .json-markup-number {
+            color: #448AFF;
+        }
+    </style>
+    <script>
+        var INDENT = '    '
+
+        function inlineRule(objRule) {
+            var str = ''
+            Object.keys(objRule).forEach(function (rule) {
+                str += rule + ':' + objRule[rule] + ';'
+            })
+            return str
+        }
+
+        function Stylize(styleFile) {
+            function styleClass(cssClass) {
+                return 'class="' + cssClass + '"'
+            }
+
+            function styleInline(cssClass) {
+                return 'style="' + inlineRule(styleFile['.' + cssClass]) + '"'
+            }
+
+            if (!styleFile) return styleClass
+            return styleInline
+        }
+
+        function type(doc) {
+            if (doc === null) return 'null'
+            if (Array.isArray(doc)) return 'array'
+            if (typeof doc === 'string' && /^https?:/.test(doc)) return 'link'
+            if (typeof doc === 'number' && /\(|\)|\d{13}/.test(doc)) return 'maybe_datenum'
+            if (typeof doc === 'object' && typeof doc.toISOString === 'function') return 'date'
+
+            return typeof doc
+        }
+
+        function escape(str) {
+            return str.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        }
+
+        function ppJson(doc, styleFile) {
+            var indent = ''
+            var style = Stylize(styleFile)
+
+            var forEach = function (list, start, end, fn) {
+                if (!list.length) return start + ' ' + end
+
+                var out = start + '\n'
+
+                indent += INDENT
+                list.forEach(function (key, i) {
+                    out += indent + fn(key) + (i < list.length - 1 ? ',' : '') + '\n'
+                })
+                indent = indent.slice(0, -INDENT.length)
+
+                return out + indent + end
+            }
+
+            function visit(obj) {
+                if (obj === undefined) return ''
+
+                switch (type(obj)) {
+                    case 'boolean':
+                        return '<span ' + style('json-markup-bool') + '>' + obj + '</span>'
+
+                    case 'number':
+                        return '<span ' + style('json-markup-number') + '>' + obj + '</span>'
+
+                    case 'date':
+                        return '<span class="json-markup-string">"' + escape(obj.toISOString()) + '"</span>'
+
+                    case 'maybe_datenum':
+                        return '<span class="json-markup-number">' + obj + '</span>' + ',<a style="color: #607D8B"> // Maybe date: ' + tfmt(new Date(obj)) + '</a>'
+
+                    case 'null':
+                        return '<span ' + style('json-markup-null') + '>null</span>'
+
+                    case 'string':
+                        return '<span ' + style('json-markup-string') + '>"' + escape(obj.replace(/\n/g, '\n' + indent)) + '"</span>'
+
+                    case 'link':
+                        return '<span ' + style('json-markup-string') + '>"<a href="' + escape(obj) + '">' + escape(obj) + '</a>"</span>'
+
+                    case 'array':
+                        return forEach(obj, '[', ']', visit)
+
+                    case 'object':
+                        var keys = Object.keys(obj).filter(function (key) {
+                            return obj[key] !== undefined
+                        })
+
+                        return forEach(keys, '{', '}', function (key) {
+                            return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(obj[key])
+                        })
+                }
+
+                return ''
+            }
+
+            return '<div ' + style('json-markup') + '>' + visit(doc) + '</div>'
+        }
+    </script>
+    <!-- end -->
+
+    <!-- Small intialize script -->
+    <script>
+        var $$ = mdui.JQ;
+        localStorage['page'] = localStorage['page'] || 25
+        localStorage['cate'] = localStorage['cate'] || 'scratch'
+        function s(set) { localStorage['cate'] = set; $$('#title')[0].text = "作品目录" + "（" + set + "）" }
+    </script>
+    <!-- Configure item display size -->
+    <style>
+        .grid-item {
+            width: 294px;
+        }
+    </style>
 </head>
 
+<!-- AppBar -->
+
 <body class="mdui-theme-primary-blue mdui-theme-accent-pink">
-  <div mdui-headroom="" class="mdui-appbar">
-    <div class="mdui-toolbar mdui-color-theme">
-      <a id="title" class="mdui-text-color-white mdui-typo-title" mdui-tooltip="{content: '显示作品计数'}">作品目录</a>
-      <div class="mdui-toolbar-spacer"></div>
-      <a id="go-back" onclick="if (pageNum > 1) { pageNum--; mdui.snackbar('后退一页：' + pageNum, { timeout: 500 }) } else { mdui.snackbar('已经到第一页了', { timeout: 700 }) }"
-        class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '后退一页'}">
-        <i class="mdui-text-color-white mdui-icon material-icons">arrow_back</i>
-      </a>
-      <a id="pagnum" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '每页显示条数'}">
-        <i class="mdui-text-color-white mdui-icon material-icons">featured_play_list</i>
-      </a>
-      <a id="btn-category" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#set-category'}" mdui-tooltip="{content: '分类'}">
-        <i class="mdui-text-color-white mdui-icon material-icons">folder</i>
-      </a>
-      <a id="refresh" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '刷新'}">
-        <i class="mdui-text-color-white mdui-icon material-icons">refresh</i>
-      </a>
+    <div mdui-headroom="" class="mdui-appbar">
+        <div class="mdui-toolbar mdui-color-theme">
+            <!-- Title -->
+            <a id="title" class="mdui-text-color-white mdui-typo-title" mdui-tooltip="{content: '显示作品计数'}">作品目录</a>
+            <div class="mdui-toolbar-spacer"></div>
+            <!-- Action buttons -->
+            <a id="go-back" onclick="if (pageNum > 1) { pageNum--; mdui.snackbar('后退一页：' + pageNum, { timeout: 500 }) } else { mdui.snackbar('已经到第一页了', { timeout: 700 }) }"
+                class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '后退一页'}">
+                <i class="mdui-text-color-white mdui-icon material-icons">arrow_back</i>
+            </a>
+            <a id="pagnum" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '每页显示条数'}">
+                <i class="mdui-text-color-white mdui-icon material-icons">featured_play_list</i>
+            </a>
+            <a id="btn-category" class="mdui-btn mdui-btn-icon" mdui-dialog="{target: '#set-category'}" mdui-tooltip="{content: '分类'}">
+                <i class="mdui-text-color-white mdui-icon material-icons">folder</i>
+            </a>
+            <a id="refresh" class="mdui-btn mdui-btn-icon" mdui-tooltip="{content: '刷新'}">
+                <i class="mdui-text-color-white mdui-icon material-icons">refresh</i>
+            </a>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // ShareType ID Processing
-    function mapSid(name) {
-      if (name == 'scratch')
-        return 1
-      else if (name == 'turtle')
-        return 2
-      else if (name == 'mindmap')
-        return 0
-      else if (name == 'recommended')
-        return 6
-      else
-        return 1
-    }
-    function getSidLogo(sid) {
-      if (sid == '1')
-        return '🐱'
-      else if (sid == '2')
-        return '🐢'
-      else if (sid == '0')
-        return '🤔'
-      else if (sid == '6')
-        return '🌠'
-      else
-        return '❓'
-    }
-    function tfmt(date) {
-      return date.getFullYear() + " 年 " + (date.getMonth() + 1) + " 月 " + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
-    }
-    // should use dark style from 19:00 to 6:00
-    function shouldApplyDarkStyle() {
-      var conf = localStorage['night']
-      if (conf != null) {
-        if (conf == false.toString())
-          return false;
-        else return true;
-      }
-      var dh = new Date();
-      var nightBegin = localStorage['nightBegin'] || 19
-      var nightEnd = localStorage['nightEnd'] || 6
-      return dh.getHours() >= nightBegin && dh.getHours() <= 24 || dh.getHours() <= nightEnd
-    }
-
-    MDUI_DARK_CLASS = 'mdui-theme-layout-dark'
-
-    // call this to apply dark style automatically
-    function autodark() {
-      var body = mdui.JQ('body')[0]
-      var cls = body.classList
-      if (shouldApplyDarkStyle())
-        cls.add(MDUI_DARK_CLASS)
-      else
-        cls.remove(MDUI_DARK_CLASS)
-    }
-
-    // main list API client
-    var api = 'https://all-dream.com/rest/share/list'
-    function rlist(page, fun) {
-      var size = localStorage['page']
-      var cate = localStorage['cate']
-      start_time = new Date()
-      console.log("Grabbing list at " + start_time)
-      $$.ajax({
-        method: 'POST',
-        url: api,
-        data: {
-          rows: size,
-          shareType: cate == 'all' ? null : mapSid(cate),
-          bigType: cate == 'all' ? 3 : 1,
-          page: pageNum
-        },
-        success: function (data) {
-          fun(JSON.parse(data));
-          end_time = new Date()
-          console.log("Finished at " + end_time + " in " + (end_time - start_time) + "ms (size is " + localStorage['page'] + ")")
+    <script>
+        // ShareType ID Processing
+        function mapSid(name) {
+            if (name == 'scratch')
+                return 1
+            else if (name == 'turtle')
+                return 2
+            else if (name == 'mindmap')
+                return 0
+            else if (name == 'recommended')
+                return 6
+            else
+                return 1
         }
-      });
-    }
-
-    // Error snackbar
-    $$(document).ajaxError(function (event, xhr, options) {
-      // xhr: XMLHttpRequest 对象
-      // options: AJAX 请求的配置参数
-      mdui.snackbar("从远端拉取数据失败：" + xhr.statusText, { timeout: 1000 });
-    });
-
-    // 用来添加 JSON 解码功能的高阶函数
-    function json_decode_chain(func) {
-      return function (json_str) { func(JSON.parse(json_str)) }
-    }
-
-    // type 1 -> gold, 2 -> gem
-    var bill_api = 'https://all-dream.com/rest/shareUserInfo/list'
-    function rlist_billboard(type, fun) {
-      var size = localStorage['page']
-      $$.ajax({
-        method: 'POST',
-        url: bill_api,
-        data: {
-          type: type,
-          rows: size,
-          page: pageNum
-        },
-        success: json_decode_chain(fun)
-      });
-    }
-
-    // shared messages
-    var mesg_api = 'https://all-dream.com/rest/shareRecentMessage/list'
-    function rlist_msg(fun) {
-      var size = localStorage['page']
-      $$.ajax({
-        method: 'POST',
-        url: mesg_api,
-        data: {
-          rows: size,
-          page: pageNum
-        },
-        success: json_decode_chain(fun)
-      });
-    }
-
-    // query user information
-    // 考虑到 User ID 是不包含特殊符号的哈希值，不需要 escape 了，但实际生产中不建议这么做（XD
-    var uq_api = 'https://all-dream.com/rest/student/info?studentId=xxxx'
-    function ruser(id, fun) {
-      $$.ajax({
-        method: 'POST',
-        url: uq_api.replace('xxxx', id),
-        success: json_decode_chain(fun)
-      });
-    }
-
-    var pq_api = 'https://all-dream.com/rest/share/queryById?id=xxxx'
-    function rproj(id, fun) {
-      $$.ajax({
-        method: 'POST',
-        url: pq_api.replace('xxxx', id),
-        success: json_decode_chain(fun)
-      });
-    }
-
-    // JSON pp based util views
-    function uid_view() {
-      alert_title.close();
-      mdui.prompt("请输入要查询的 UID（Like <em>d21ad8f718264854a4dee4dc4a11badd</em>）", function (t, d) {
-        ruser(t, function (d) { setlist(ppJson(d)) });
-      });
-    }
-
-    function share_view() {
-      alert_title.close();
-      mdui.prompt("请输入要查询的 SID（Like <em>bb2de65d43fb4a9e82ce460b7c830d67</em>）", function (t, d) {
-        rproj(t, function (d) { setlist(ppJson(d)) });
-      });
-    }
-
-    function gem_view() {
-      alert_title.close();
-      // mdui.snackbar("Work In Progress")
-      rlist_billboard(1, function (d) { setlist(ppJson(d)) });
-    }
-
-    function gold_view() {
-      alert_title.close();
-      // mdui.snackbar("Work In Progress");
-      rlist_billboard(2, function (d) { setlist(ppJson(d)) });
-    }
-
-    function slist_view() {
-      alert_title.close();
-      rlist_msg(function (d) { setlist(ppJson(d)) });
-    }
-
-    function mlist_view() {
-      alert_title.close();
-      rlist(pageNum, function (d) { setlist(ppJson(d)) });
-    }
-    // end
-
-    $$('#pagnum')[0].onclick = function () {
-      var old_num = localStorage['page']
-      pagnum_ok = function (t, d) {
-        var n = Number(t)
-        if (n != 0 && !Number.isNaN(n)) {
-          localStorage['page'] = n
-          mdui.snackbar("你设置了新每页项目数：" + n, { buttonText: 'undo', onButtonClick: function () { localStorage['page'] = old_num } })
-        } else { mdui.snackbar("不能设置为 0，请不要填为空") }
-      }
-      var cancel = function (t, d) {
-        d.close()
-      }
-      diag_pagnum = mdui.prompt("请输入每页显示项目数（当前 " + localStorage['page'] + " 项/页）", pagnum_ok, cancel, { confirmOnEnter: true })
-    }
-
-    $$('#title')[0].onclick = function () {
-      $$.ajax({
-        method: 'POST',
-        url: 'https://all-dream.com/rest/share/queryCount',
-        success: function (data) {
-          var obj = JSON.parse(data)
-          var toolset = "<p><div class=\"mdui-typo\"><h3>查询小工具：</h3><p>根据 <em>UID</em> 获取用户详细信息 <a onclick=\"uid_view()\">👤</a><p>根据 <em>SID</em> 获取分享信息 <a onclick=\"share_view()\">📄</a><p>查询宝石榜 <a onclick=\"gem_view()\">💎</a><p>查询金币榜 <a onclick=\"gold_view()\">🔑</a><p>查询分享消息 <a onclick=\"slist_view()\">🎉</a><p>检查分享列表源代码 <a onclick=\"mlist_view()\">📟</a><p>这是由 <a href=\"https://t.me/duangsuse\">duangsuse</a> 开发的 <a href=\"https://all-dream.com\">傲梦</a> 分享项目数据查询工具，以 <strong>GNU LGPL-3.0</strong> 共享协议开放源代码<p><small>感谢 <strong>MDUI、download.js、Masonry</strong> 提供的部分特性支持<p>另外，请注意，查询工具作为附属组件，不受技术支持</small></div>"
-          alert_title = mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个</a>" + toolset);
+        function getSidLogo(sid) {
+            if (sid == '1')
+                return '🐱'
+            else if (sid == '2')
+                return '🐢'
+            else if (sid == '0')
+                return '🤔'
+            else if (sid == '6')
+                return '🌠'
+            else
+                return '❓'
         }
-      });
-    }
-
-    pageNum = 1
-    bin = []
-    offical_prefix = 'https://all-dream.com/bigwall?id='
-    $$('#refresh')[0].onclick = function () {
-      bin = []
-      var grab_snack = mdui.snackbar("正在从远端获取列表...")
-      // Angry! 为啥我不知道怎么定义局部变量
-      var start_time2 = new Date()
-      rlist(pageNum, function (d) {
-        grab_snack.close()
-        mdui.snackbar("成功从远端获得列表，用时 " + (new Date() - start_time2) / 1000 + " 秒")
-        var buf = ""
-        for (var k in d['list']) {
-          var v = d['list'][k]
-          // console.log(v)
-          bin[k] = v
-          item = fill('https://all-dream.com/' + v['coverUrl'], (v['courseTypeName'] == null ? '无课程分类' : v['courseTypeName']) + ' - ' + v['name'] + '（' + (v['grade'] == null ? '无学级' : v['grade']) + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')", offical_prefix + v['id'])
-          buf += wrap(item)
+        function tfmt(date) {
+            return date.getFullYear() + " 年 " + (date.getMonth() + 1) + " 月 " + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
         }
-        setlist(buf);
-        $$.showOverlay();
-        $$.throttle(function () { refresh_mash(); $$.hideOverlay(); }, 1000)();
-      });
-      autodark();
-    }
-
-    // auto apply dark style
-    autodark();
-
-    // hotkeys
-    function do_refresh() { $$('#refresh').trigger('click') }
-    document.onkeyup = function (k) {
-      // Enter to refresh
-      if (k.code == 'Enter') {
-        if (k.target == $$('body')[0]) {
-          do_refresh();
-        } else {
-          if (typeof diag_pagnum != 'undefined') {
-            // deprecated
-            // diag_pagnum.close();
-            // pagnum_ok();
-          }
+        // should use dark style from 19:00 to 6:00
+        function shouldApplyDarkStyle() {
+            var conf = localStorage['night']
+            if (conf != null) {
+                if (conf == false.toString())
+                    return false;
+                else return true;
+            }
+            var dh = new Date();
+            var nightBegin = localStorage['nightBegin'] || 19
+            var nightEnd = localStorage['nightEnd'] || 6
+            return dh.getHours() >= nightBegin && dh.getHours() <= 24 || dh.getHours() <= nightEnd
         }
-      }
 
-      // console.log(k.code);
-      switch (k.code) {
-        case 'KeyM':
-          $$('#title').trigger('click');
-          break
-        case 'ArrowRight':
-          $$('.mdui-fab').trigger('click');
-          break
-        case 'ArrowLeft':
-          $$('#go-back').trigger('click');
-          break
-        case 'KeyC':
-          $$('#btn-category').trigger('click');
-          break
-        case 'KeyT':
-          $$('#pagnum').trigger('click');
-      }
-    }
-  </script>
+        MDUI_DARK_CLASS = 'mdui-theme-layout-dark'
 
-  <script>
-    var template = '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-btn-raised"><i class="mdui-icon mdui-icon-left material-icons">file_download</i> 下载</button><button onclick="@a2@" class="mdui-btn mdui-btn-raised mdui-ripple"><i class="mdui-icon mdui-icon-left material-icons">info_outline</i> 源数据</button><a href="@a3@" class="mdui-float-right mdui-btn mdui-btn-raised mdui-btn-icon mdui-ripple"><i class="mdui-icon material-icons">insert_link</i></a></div></div>'
-    function fill(img, title, subt, desc, a1, a2, a3) {
-      return template.replace('@img@', img)
-        .replace('@title@', title)
-        .replace('@subtitle@', subt)
-        .replace('@desc@', desc)
-        .replace('@a1@', a1)
-        .replace('@a2@', a2)
-        .replace('@a3@', a3);
-    }
-    function setlist(t) {
-      list.innerHTML = t
-    }
-    function wrap(h) {
-      return '<div class="grid-item mdui-shadow-5 mdui-grid-tile mdui-grid-list">' + h + '</div>'
-    }
-  </script>
+        // call this to apply dark style automatically
+        function autodark() {
+            var body = mdui.JQ('body')[0]
+            var cls = body.classList
+            if (shouldApplyDarkStyle())
+                cls.add(MDUI_DARK_CLASS)
+            else
+                cls.remove(MDUI_DARK_CLASS)
+        }
 
-  <!-- Main list -->
-  <div id="list" style="padding: 10px;" class="grid mdui-container-fluid"></div>
-  <script>var list = $$('#list')[0]</script>
-  <script>
-    function refresh_mash() {
-      var msnry = new Masonry(list, {
-        itemSelector: '.grid-item',
-        columnWidth: 30
-      });
-    }
-  </script>
+        // main list API client
+        var api = 'https://all-dream.com/rest/share/list'
+        function rlist(page, fun) {
+            var size = localStorage['page']
+            var cate = localStorage['cate']
+            start_time = new Date()
+            console.log("Grabbing list at " + start_time)
+            $$.ajax({
+                method: 'POST',
+                url: api,
+                data: {
+                    rows: size,
+                    shareType: cate == 'all' ? null : mapSid(cate),
+                    bigType: cate == 'all' ? 3 : 1,
+                    page: pageNum
+                },
+                success: function (data) {
+                    fun(JSON.parse(data));
+                    end_time = new Date()
+                    console.log("Finished at " + end_time + " in " + (end_time - start_time) + "ms (size is " + localStorage['page'] + ")")
+                }
+            });
+        }
 
-  <button onclick="pageNum++; mdui.snackbar('前进一页：' + pageNum, { timeout: 500 })" class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple">
-    <i class="mdui-icon material-icons">arrow_forward</i>
-  </button>
+        // Error snackbar
+        $$(document).ajaxError(function (event, xhr, options) {
+            // xhr: XMLHttpRequest 对象
+            // options: AJAX 请求的配置参数
+            mdui.snackbar("从远端拉取数据失败：" + xhr.statusText, { timeout: 1000 });
+        });
 
-  <div class="mdui-dialog" id="set-category">
-    <div class="mdui-dialog-title">请选择要显示的分类</div>
-    <div class="mdui-dialog-content mdui-typo">您可以选择只显示指定类型的项目，包括
-      <code>全部、MindMap、Scratch、JS Turtle、推荐</code>
+        // 用来创建混合函数的高阶函数
+        // @arg func: 被内联的函数
+        // @arg chain_fun: 目标函数
+        // @return 生成的混合函数闭包
+        function mixture(func, chain_fun) {
+            return function (arg1) {
+                return func(chain_fun(arg1))
+            }
+        }
+        // Curry for mixture
+        function mk_mixture(chain_fun) {
+            return function (func) {
+                return mixture(func, chain_fun)
+            }
+        }
+
+        // 用来添加 JSON 解码功能的高阶函数
+        json_decode_chain = mk_mixture(JSON.parse)
+
+        // Billboard type 1 -> gold, 2 -> gem
+        var bill_api = 'https://all-dream.com/rest/shareUserInfo/list'
+        function rlist_billboard(type, fun) {
+            var size = localStorage['page']
+            $$.ajax({
+                method: 'POST',
+                url: bill_api,
+                data: {
+                    type: type,
+                    rows: size,
+                    page: pageNum
+                },
+                success: json_decode_chain(fun)
+            });
+        }
+
+        // Query shared messages
+        var mesg_api = 'https://all-dream.com/rest/shareRecentMessage/list'
+        function rlist_msg(fun) {
+            var size = localStorage['page']
+            $$.ajax({
+                method: 'POST',
+                url: mesg_api,
+                data: {
+                    rows: size,
+                    page: pageNum
+                },
+                success: json_decode_chain(fun)
+            });
+        }
+
+        // Query user information
+        // 考虑到 User ID 是不包含特殊符号的哈希值，不需要 escape 了，但实际生产中不建议这么做（XD
+        var uq_api = 'https://all-dream.com/rest/student/info?studentId=xxxx'
+        function ruser(id, fun) {
+            $$.ajax({
+                method: 'POST',
+                url: uq_api.replace('xxxx', id),
+                success: json_decode_chain(fun)
+            });
+        }
+
+        var pq_api = 'https://all-dream.com/rest/share/queryById?id=xxxx'
+        function rproj(id, fun) {
+            $$.ajax({
+                method: 'POST',
+                url: pq_api.replace('xxxx', id),
+                success: json_decode_chain(fun)
+            });
+        }
+
+        // Set list view HTML text to t
+        function setlist(t) {
+            list.innerHTML = t
+        }
+
+        // Show json as list
+        pplist = mixture(setlist, ppJson)
+
+        // JSON pp based util views
+        function uid_view() {
+            alert_title.close();
+            mdui.prompt("请输入要查询的 UID（Like <em>d21ad8f718264854a4dee4dc4a11badd</em>）", function (t, d) {
+                ruser(t, function (d) { pplist(d) });
+            }, null, { confirmOnEnter: true });
+        }
+
+        function share_view() {
+            alert_title.close();
+            mdui.prompt("请输入要查询的 SID（Like <em>bb2de65d43fb4a9e82ce460b7c830d67</em>）", function (t, d) {
+                rproj(t, function (d) { pplist(d) });
+            }, null, { confirmOnEnter: true });
+        }
+
+        function gem_view() {
+            alert_title.close();
+            // mdui.snackbar("Work In Progress")
+            rlist_billboard(1, function (d) { pplist(d) });
+        }
+
+        function gold_view() {
+            alert_title.close();
+            // mdui.snackbar("Work In Progress");
+            rlist_billboard(2, function (d) { pplist(d) });
+        }
+
+        function slist_view() {
+            alert_title.close();
+            rlist_msg(function (d) { pplist(d) });
+        }
+
+        function mlist_view() {
+            alert_title.close();
+            rlist(pageNum, function (d) { pplist(d) });
+        }
+        // end util views
+
+        // pageNumber changer
+        $$('#pagnum')[0].onclick = function () {
+            var old_num = localStorage['page']
+            pagnum_ok = function (t, d) {
+                var n = Number(t)
+                if (n != 0 && !Number.isNaN(n)) {
+                    localStorage['page'] = n
+                    mdui.snackbar("你设置了新每页项目数：" + n, { buttonText: 'undo', onButtonClick: function () { localStorage['page'] = old_num } })
+                } else { mdui.snackbar("不能设置为 0，请不要填为空") }
+            }
+            var cancel = function (t, d) {
+                d.close()
+            }
+            diag_pagnum = mdui.prompt("请输入每页显示项目数（当前 " + localStorage['page'] + " 项/页）", pagnum_ok, cancel, { confirmOnEnter: true })
+        }
+
+        // Menu
+        $$('#title')[0].onclick = function () {
+            $$.ajax({
+                method: 'POST',
+                url: 'https://all-dream.com/rest/share/queryCount',
+                success: function (data) {
+                    var obj = JSON.parse(data)
+                    var toolset = "<p><div class=\"mdui-typo\"><h3>查询小工具：</h3><p>根据 <em>UID</em> 获取用户详细信息 <a onclick=\"uid_view()\">👤</a><p>根据 <em>SID</em> 获取分享信息 <a onclick=\"share_view()\">📄</a><p>查询宝石榜 <a onclick=\"gem_view()\">💎</a><p>查询金币榜 <a onclick=\"gold_view()\">🔑</a><p>查询分享消息 <a onclick=\"slist_view()\">🎉</a><p>检查分享列表源代码 <a onclick=\"mlist_view()\">📟</a><p>这是由 <a href=\"https://t.me/duangsuse\">duangsuse</a> 开发的 <a href=\"https://all-dream.com\">傲梦</a> 分享项目数据查询工具，以 <strong>GNU LGPL-3.0</strong> 共享协议开放源代码<p><small>感谢 <strong>MDUI、download.js、Masonry</strong> 提供的部分特性支持<p>另外，请注意，查询工具作为附属组件，不受技术支持</small></div>"
+                    alert_title = mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个</a>" + toolset);
+                }
+            });
+        }
+
+        // Refresh view
+        pageNum = 1
+        bin = []
+        offical_prefix = 'https://all-dream.com/bigwall?id='
+        $$('#refresh')[0].onclick = function () {
+            bin = []
+            var grab_snack = mdui.snackbar("正在从远端获取列表...")
+            // Angry! 为啥我不知道怎么定义局部变量
+            var start_time2 = new Date()
+            rlist(pageNum, function (d) {
+                grab_snack.close()
+                mdui.snackbar("成功从远端获得列表，用时 " + (new Date() - start_time2) / 1000 + " 秒", { timeout: 500 })
+                var buf = ""
+                for (var k in d['list']) {
+                    var v = d['list'][k]
+                    // console.log(v)
+                    bin[k] = v
+                    item = fill('https://all-dream.com/' + v['coverUrl'], (v['courseTypeName'] == null ? '无课程分类' : v['courseTypeName']) + ' - ' + v['name'] + '（' + (v['grade'] == null ? '无学级' : v['grade']) + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')", offical_prefix + v['id'])
+                    buf += wrap(item)
+                }
+                setlist(buf);
+                $$.showOverlay();
+                $$.throttle(function () { refresh_mash(); $$.hideOverlay(); }, 1000)();
+                $$.throttle(function () { refresh_mash() }, 2000)();
+            });
+            autodark();
+        }
+
+        // Auto apply dark style
+        autodark();
+
+        // Support for hotkeys
+        function do_refresh() { $$('#refresh').trigger('click') }
+        document.onkeyup = function (k) {
+            // Enter to refresh
+            if (k.code == 'Enter') {
+                if (k.target == $$('body')[0]) {
+                    do_refresh();
+                } else {
+                    if (typeof diag_pagnum != 'undefined') {
+                        // deprecated
+                        // diag_pagnum.close();
+                        // pagnum_ok();
+                    }
+                }
+            }
+
+            // console.log(k.code);
+            switch (k.code) {
+                case 'KeyM':
+                    $$('#title').trigger('click');
+                    break
+                case 'ArrowRight':
+                    $$('.mdui-fab').trigger('click');
+                    break
+                case 'ArrowLeft':
+                    $$('#go-back').trigger('click');
+                    break
+                case 'KeyC':
+                    $$('#btn-category').trigger('click');
+                    break
+                case 'KeyT':
+                    $$('#pagnum').trigger('click');
+            }
+        }
+    </script>
+
+    <script>
+        // Fill MDUI card view template
+        var template = '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-btn-raised"><i class="mdui-icon mdui-icon-left material-icons">file_download</i> 下载</button><button onclick="@a2@" class="mdui-btn mdui-btn-raised mdui-ripple"><i class="mdui-icon mdui-icon-left material-icons">info_outline</i> 源数据</button><a href="@a3@" class="mdui-float-right mdui-btn mdui-btn-raised mdui-btn-icon mdui-ripple"><i class="mdui-icon material-icons">insert_link</i></a></div></div>'
+        function fill(img, title, subt, desc, a1, a2, a3) {
+            return template.replace('@img@', img)
+                .replace('@title@', title)
+                .replace('@subtitle@', subt)
+                .replace('@desc@', desc)
+                .replace('@a1@', a1)
+                .replace('@a2@', a2)
+                .replace('@a3@', a3);
+        }
+
+        // Wrap map item
+        function wrap(h) {
+            return '<div class="grid-item mdui-shadow-5 mdui-grid-tile mdui-grid-list">' + h + '</div>'
+        }
+    </script>
+
+    <!-- Main list -->
+    <div id="list" style="padding: 10px;" class="grid mdui-container-fluid"></div>
+    <script>
+        var list = $$('#list')[0]
+        // Stream layout support
+        function refresh_mash() {
+            var msnry = new Masonry(list, {
+                itemSelector: '.grid-item',
+                columnWidth: 30
+            });
+        }
+    </script>
+
+    <!-- Next page fab -->
+    <button onclick="pageNum++; mdui.snackbar('前进一页：' + pageNum, { timeout: 500 })" class="mdui-fab mdui-fab-fixed mdui-color-theme-accent mdui-ripple">
+        <i class="mdui-icon material-icons">arrow_forward</i>
+    </button>
+
+    <!-- category dialog -->
+    <div class="mdui-dialog" id="set-category">
+        <div class="mdui-dialog-title">请选择要显示的分类</div>
+        <div class="mdui-dialog-content mdui-typo">您可以选择只显示指定类型的项目，包括
+            <code>全部、MindMap、Scratch、JS Turtle、推荐</code>
+        </div>
+        <div class="mdui-dialog-actions mdui-dialog-actions-stacked">
+            <button onclick="s('all')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show All | 显示全部</button>
+            <button onclick="s('mindmap')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show Mind-Maps | MindMap</button>
+            <button onclick="s('scratch')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show Scratch Projects | Scratch </button>
+            <button onclick="s('turtle')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show JS Turtle Projects | JS Turtle</button>
+            <button onclick="s('recommended')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Recommended Projects | 推荐项目</button>
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close="">Keep settings, close dialog | 保持现状</button>
+        </div>
     </div>
-    <div class="mdui-dialog-actions mdui-dialog-actions-stacked">
-      <button onclick="s('all')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show All | 显示全部</button>
-      <button onclick="s('mindmap')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show Mind-Maps | MindMap</button>
-      <button onclick="s('scratch')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show Scratch Projects | Scratch </button>
-      <button onclick="s('turtle')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Show JS Turtle Projects | JS Turtle</button>
-      <button onclick="s('recommended')" class="mdui-btn mdui-ripple" mdui-dialog-confirm="">Recommended Projects | 推荐项目</button>
-      <button class="mdui-btn mdui-ripple" mdui-dialog-close="">Keep settings, close dialog | 保持现状</button>
-    </div>
-  </div>
 </body>
 
 </html>
