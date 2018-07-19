@@ -303,7 +303,11 @@ Licensed under LGPLv3 -->
         $$(document).ajaxError(function (event, xhr, options) {
             // xhr: XMLHttpRequest 对象
             // options: AJAX 请求的配置参数
-            mdui.snackbar("从远端拉取数据失败：" + xhr.statusText, { timeout: 1000 });
+            mdui.snackbar("从远端拉取数据失败：" + (xhr.statusText == '' ? '未知原因' : xhr.statusText), {
+                timeout: 1000, buttonText: '详细信息', onClick: function () {
+                    setlist(xhr.toSource());
+                }
+            });
         });
 
         // 用来创建混合函数的高阶函数
@@ -556,14 +560,18 @@ Licensed under LGPLv3 -->
         // URL handlers
         function show_user(uid) {
             console.log("Show user JSON: " + uid)
+            ruser(uid, function (d) { pplist(d) });
         }
 
         function show_share(sid) {
             console.log("Show share JSON: " + sid)
+            rproj(sid, function (d) { pplist(d) });
         }
 
         function show_list() {
             console.log("Show list: " + query['category'] + ' ' + pageNum + '/' + localStorage['page'])
+            localStorage['cate'] = query['category']
+            do_refresh();
         }
 
         // Simple plugin system for AllDreamWall
