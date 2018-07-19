@@ -366,7 +366,7 @@ Licensed under LGPLv3 -->
         function ruser(id, fun) {
             $$.ajax({
                 method: 'POST',
-                url: uq_api.replace('xxxx', id),
+                url: uq_api.replace('xxxx', id || ''),
                 success: json_decode_chain(fun)
             });
         }
@@ -375,7 +375,7 @@ Licensed under LGPLv3 -->
         function rproj(id, fun) {
             $$.ajax({
                 method: 'POST',
-                url: pq_api.replace('xxxx', id),
+                url: pq_api.replace('xxxx', id || ''),
                 success: json_decode_chain(fun)
             });
         }
@@ -599,9 +599,9 @@ Licensed under LGPLv3 -->
         // Serial, execute a function with query data
         function temp_change_pagNum_rows(fun) {
             pageNum_old = pageNum
-            pageNum = query['page']
+            pageNum = query['page'] || pageNum_old
             rows_old = localStorage['page']
-            localStorage['page'] = query['rows']
+            localStorage['page'] = query['rows'] || rows_old
             fun();
             pageNum = pageNum_old
             localStorage['page'] = rows_old
