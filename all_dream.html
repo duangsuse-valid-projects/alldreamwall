@@ -153,7 +153,15 @@ Licensed under LGPLv3 -->
                         })
 
                         return forEach(keys, '{', '}', function (key) {
-                            return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(obj[key])
+                            if (emitter != null) {
+                                var eresult = emitter(key, obj[key]);
+                                if (eresult == '')
+                                    return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(obj[key])
+                                else
+                                    return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(obj[key]) + ', <a style="color: #607D8B">// ' + eresult + '</a>'
+                            } else {
+                                return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(obj[key])
+                            }
                         })
                 }
 
@@ -186,6 +194,12 @@ Licensed under LGPLv3 -->
         }
         // Query map
         var query = getQueryParams(document.location.search);
+        emitter = null // global comment emitter
+
+        // Set comment emitter
+        function setCommentEmitter(funame) {
+            emitter = plugin_emitters[funame]; // set emitter
+        }
     </script>
     <!-- Configure item display size -->
     <style>
@@ -487,7 +501,24 @@ Licensed under LGPLv3 -->
                 setlist(buf);
                 $$.showOverlay();
                 $$.throttle(function () { refresh_mash(); $$.hideOverlay(); }, 1000)();
-                $$.throttle(function () { refresh_mash() }, 2000)();
+
+                // F**king mash
+                $$.throttle(refresh_mash, 2000)();
+                $$.throttle(refresh_mash, 4000)();
+                $$.throttle(refresh_mash, 6000)();
+                $$.throttle(refresh_mash, 10000)();
+                $$.throttle(refresh_mash, 20000)();
+                $$.throttle(refresh_mash, 25000)();
+                $$.throttle(refresh_mash, 35000)();
+                $$.throttle(refresh_mash, 40000)();
+                $$.throttle(refresh_mash, 60000)();
+                $$.throttle(refresh_mash, 65000)();
+
+                // 给了我代码运行很快的错觉
+                var tmp_pagesize = localStorage['page']
+                if (localStorage['page'] > 700)
+                    for (var it = 4; it < tmp_pagesize / 10; it += 100)
+                        $$.throttle(refresh_mash, Math.abs(1000 << Math.round(it / 100)))();
             });
             autodark();
         }
@@ -588,18 +619,48 @@ Licensed under LGPLv3 -->
 
         // plugin handlers, plugin initialize call will use this map
         plugin_url_handlers = {}
+
+        // JSON commenter
+        plugin_emitters = {}
+
         // DSL environment map
         dsl = {}
         function pluginify(gist_id) {
             console.log("PluginInstall: Gist#" + gist_id)
+            if (typeof gist_id == 'undefined') {
+                mdui.snackbar("Plugin-install 需要接受 gist_id 参数", { timeout: 2000 })
+                return;
+            }
         }
 
+        DSL_ON_INITIALIZE = undefined
+        DSL_ON_MENU = 1
+        DSL_ON_URL = 2
+        DSL_ON_INSTALL = 3
         // Interpreter for AllDreamWall plugin DSL
         // invokeType undefined: execute main script(initialize ... end)
         // invokeType 1: menu link clicked(execute begin ... end)
         // invokeType 2: url type(execute urlhandle ... end)
-        // invokeType 3: register JSON prettifier comment gen. (execute jsoncomment ... end)
-        function dslInterpreter(code, invokeType) { }
+        // invokeType 3: register JSON prettifier comment gen. (execute jsoncomment ... end) (obsoleted, called once on installation)
+        // DreamScript WIP, current interpreter is ESVM
+        function dslInterpreter(code, invokeType) {
+            switch (invokeType) {
+                case DSL_ON_INITIALIZE:
+                    eval(code)('initialize');
+                    break
+                case DSL_ON_MENU:
+                    eval(code)('on_menu');
+                    break
+                case DSL_ON_URL:
+                    eval(code)('on_url');
+                    break
+                case DSL_ON_INSTALL:
+                    eval(code)('install');
+                    break
+                default:
+                    mdui.snackbar("插件系统错误：dsl 解释器无法理解 invokeType: " + invokeType, { timeout: 3000 });
+            }
+        }
 
         // Serial, execute a function with query data
         function temp_change_pagNum_rows(fun) {
@@ -658,13 +719,24 @@ Licensed under LGPLv3 -->
 
                 default:
                     if (typeof plugin_url_handlers[query['type']] != 'undefined') {
-                        dslInterpreter(plugin_url_handlers[query['type']], 2)
+                        dslInterpreter(plugin_url_handlers[query['type']].script, DSL_ON_URL)
                     } else {
                         mdui.snackbar('无法理解操作类型：' + query['type'])
                     }
                     break;
             }
         }
+
+        // Call initialize function
+        // Plugin map contains:
+        // plugin ID
+        // plugin author
+        // plugin desc
+        // plugin menuitem
+        // plugin link text
+        // plugin script
+        for (var p in plugins)
+            dslInterpreter(p.script, DSL_ON_INITIALIZE)
     </script>
 
     <!-- Next page fab -->
