@@ -763,6 +763,18 @@ Licensed under LGPLv3 -->
             localStorage['page'] = rows_old
         }
 
+        // Call initialize function
+        // Plugin map contains:
+        // plugin ID
+        // plugin author
+        // plugin desc
+        // plugin menuitem
+        // plugin link text
+        // plugin script
+
+        plugins.forEach(dslInterpreter)
+        // dslInterpreter(p.script, DSL_ON_INITIALIZE)
+
         // URL Param support
         if (Object.keys(query).length != 0) {
             switch (query['type']) {
@@ -816,17 +828,6 @@ Licensed under LGPLv3 -->
                     break;
             }
         }
-
-        // Call initialize function
-        // Plugin map contains:
-        // plugin ID
-        // plugin author
-        // plugin desc
-        // plugin menuitem
-        // plugin link text
-        // plugin script
-        for (var p in plugins)
-            dslInterpreter(p.script, DSL_ON_INITIALIZE)
     </script>
 
     <!-- Next page fab -->
