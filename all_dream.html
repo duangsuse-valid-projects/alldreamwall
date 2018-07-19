@@ -171,6 +171,21 @@ Licensed under LGPLv3 -->
         localStorage['page'] = localStorage['page'] || 25
         localStorage['cate'] = localStorage['cate'] || 'scratch'
         function s(set) { localStorage['cate'] = set; $$('#title')[0].text = "作品目录" + "（" + set + "）" }
+        function getQueryParams(qs) {
+            qs = qs.split('+').join(' ');
+
+            var params = {},
+                tokens,
+                re = /[?&]?([^=]+)=([^&]*)/g;
+
+            while (tokens = re.exec(qs)) {
+                params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+            }
+
+            return params;
+        }
+        // Query map
+        var query = getQueryParams(document.location.search);
     </script>
     <!-- Configure item display size -->
     <style>
@@ -385,24 +400,28 @@ Licensed under LGPLv3 -->
         }
 
         function gem_view() {
-            alert_title.close();
+            if (typeof alert_title != 'undefined')
+                alert_title.close();
             // mdui.snackbar("Work In Progress")
             rlist_billboard(1, function (d) { pplist(d) });
         }
 
         function gold_view() {
-            alert_title.close();
+            if (typeof alert_title != 'undefined')
+                alert_title.close();
             // mdui.snackbar("Work In Progress");
             rlist_billboard(2, function (d) { pplist(d) });
         }
 
         function slist_view() {
-            alert_title.close();
+            if (typeof alert_title != 'undefined')
+                alert_title.close();
             rlist_msg(function (d) { pplist(d) });
         }
 
         function mlist_view() {
-            alert_title.close();
+            if (typeof alert_title != 'undefined')
+                alert_title.close();
             rlist(pageNum, function (d) { pplist(d) });
         }
         // end util views
@@ -532,6 +551,106 @@ Licensed under LGPLv3 -->
                 itemSelector: '.grid-item',
                 columnWidth: 30
             });
+        }
+
+        // URL handlers
+        function show_user(uid) {
+            console.log("Show user JSON: " + uid)
+        }
+
+        function show_share(sid) {
+            console.log("Show share JSON: " + sid)
+        }
+
+        function show_list() {
+            console.log("Show list: " + query['category'] + ' ' + pageNum + '/' + localStorage['page'])
+        }
+
+        // Simple plugin system for AllDreamWall
+        github_api = 'https://api.github.com/'
+        github_gist_api = 'https://api.github.com/gist/'
+
+        // plugin array
+        plugins = localStorage['plugins'] || []
+
+        // plugin handlers, plugin initialize call will use this map
+        plugin_url_handlers = {}
+        // DSL environment map
+        dsl = {}
+        function pluginify(gist_id) {
+            console.log("PluginInstall: Gist#" + gist_id)
+        }
+
+        // Interpreter for AllDreamWall plugin DSL
+        // invokeType undefined: execute main script(initialize ... end)
+        // invokeType 1: menu link clicked(execute begin ... end)
+        // invokeType 2: url type(execute urlhandle ... end)
+        // invokeType 3: register JSON prettifier comment gen. (execute jsoncomment ... end)
+        function dslInterpreter(code, invokeType) { }
+
+        // Serial, execute a function with query data
+        function temp_change_pagNum_rows(fun) {
+            pageNum_old = pageNum
+            pageNum = query['page']
+            rows_old = localStorage['page']
+            localStorage['page'] = query['rows']
+            fun();
+            pageNum = pageNum_old
+            localStorage['page'] = rows_old
+        }
+
+        // URL Param support
+        if (Object.keys(query).length != 0) {
+            switch (query['type']) {
+                case undefined:
+                case null:
+                    mdui.snackbar('您的请求含有参数，但是没有指明操作类型，参数将被忽略');
+                    break;
+
+                case 'user':
+                    show_user(query['uid'])
+                    break;
+
+                case 'work':
+                    show_share(query['sid'])
+                    break;
+
+                case 'shared_messages':
+                    temp_change_pagNum_rows(slist_view);
+                    break;
+
+                case 'source':
+                    temp_change_pagNum_rows(mlist_view);
+                    break;
+
+                case 'bill_gem':
+                    temp_change_pagNum_rows(gem_view)
+                    break;
+
+                case 'bill_gold':
+                    temp_change_pagNum_rows(gold_view)
+                    break;
+
+                case 'list':
+                    temp_change_pagNum_rows(show_list)
+                    break;
+
+                case 'show_about':
+                    $$('#title').trigger('click');
+                    break;
+
+                case 'plugin':
+                    pluginify(query['gist_id'])
+                    break;
+
+                default:
+                    if (typeof plugin_url_handlers[query['type']] != 'undefined') {
+                        dslInterpreter(plugin_url_handlers[query['type']], 2)
+                    } else {
+                        mdui.snackbar('无法理解操作类型：' + query['type'])
+                    }
+                    break;
+            }
         }
     </script>
 
