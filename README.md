@@ -1,4 +1,4 @@
-# AllDreamWall ![Based On MDUI](https://img.shields.io/badge/HTML_UI_Framework-MDUI-pink.svg?style=flat-square) ![By duangsuse](https://img.shields.io/badge/author-duangsuse-green.svg?style=flat-square) ![It's a client](https://img.shields.io/badge/type-client-red.svg?style=flat-square)
+# AllDreamWall ![Based On MDUI](https://img.shields.io/badge/HTML_UI_Framework-MDUI-pink.svg?style=flat-square) ![By duangsuse](https://img.shields.io/badge/author-duangsuse-green.svg?style=flat-square) ![It's a client](https://img.shields.io/badge/type-client-red.svg?style=flat-square) [![use online](https://img.shields.io/badge/use-online-000000.svg?style=flat-square)](https://popf.rip/r.html)
 
 一个基于 MDUI 的 [傲梦](https://all-dream.com) 分享平台 [客户端](https://duangsuse.github.io/alldreamwall/all_dream.html)，纯 __HTML + CSS + JavaScript__ 编写
 
@@ -27,6 +27,31 @@
 ## 许可证 | License
 
 alldreamwall.html: __GNU LGPL 3.0，其中包含引用其它授权的代码不包含在内__
+
+## 用途 | Usage
+
+AllDreamWall 支持生成官方客户端的链接来测试分享，也可以直接下载作品的源数据和文件
+
+### 快捷键 | Hotkeys
+
++ 任何对话框都可以使用 __Enter__ 键确认
++ __Left Arrow/Right Arrow__ 来前进/后退一页
++ __M__ 键打开菜单
++ __T__ 键选择分页条数
++ __C__ 键选择作品分类
+
+### 默认链接参数 | Supported URL Params
+
+AllDreamWall 使用 `type` url 参数确认要执行的动作类型
+
++ user - 需要一个额外参数： __uid__ 用户 ID [例子](https://popf.rip/all_dream.html?type=user&uid=d21ad8f718264854a4dee4dc4a11badd)
++ work - 需要一个额外参数： __sid__ 分享 ID [例子](https://popf.rip/all_dream.html?type=work&sid=)
++ shared_messages - 可以使用参数 __page__, __rows__ [e.g.](https://popf.rip/all_dream.html?type=shared_messages&page=2)
++ source - 可以使用参数 __page__, __rows__ [e.g.](https://popf.rip/all_dream.html?type=source&rows=1)
++ bill_gem / bill_gold - 可以使用参数 __page__, __rows__ [e.g.](https://popf.rip/all_dream.html?type=bill_gold&page=2)
++ list - 可以使用参数 __page__, __rows__, __category__ [e.g.](https://popf.rip/all_dream.html?type=list&page=2&category=recommended)
++ show_about - 无参数
++ plugin - 可以使用参数 __gist_id__
 
 ## 截图 | Shots
 
