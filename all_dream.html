@@ -472,6 +472,11 @@ Licensed under LGPLv3 -->
                 grab_snack.close()
                 mdui.snackbar("成功从远端获得列表，用时 " + (new Date() - start_time2) / 1000 + " 秒", { timeout: 500 })
                 var buf = ""
+                if ($$(d['list']).length == 0)
+                    if (pageNum != 0)
+                        mdui.snackbar("注意，我们貌似获得了一个空列表，可能是页面索引超过了实际上的最后一页", { timeout: 2500, buttonText: 'get back', onClick: function () { pageNum = 0 } });
+                    else
+                        mdui.snackbar("注意，我们貌似获得了一个空列表，请检查参数（如分类）是否正确", { timeout: 2000 });
                 for (var k in d['list']) {
                     var v = d['list'][k]
                     // console.log(v)
