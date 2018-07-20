@@ -158,7 +158,7 @@ Licensed under LGPLv3 -->
                         return forEach(keys, '{', '}', function (key) {
                             if (emitter != null) {
                                 var eresult = emitter(key, obj[key]);
-                                if (eresult == '')
+                                if (eresult == '' || typeof eresult == 'undefined')
                                     return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' +
                                         visit(obj[key])
                                 else
@@ -610,7 +610,7 @@ Licensed under LGPLv3 -->
                             timeout: 2500,
                             buttonText: 'get back',
                             onButtonClick: function () {
-                                pageNum = 0
+                                pageNum = 1;
                             }
                         });
                     else
