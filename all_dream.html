@@ -133,16 +133,19 @@ Licensed under LGPLv3 -->
                         return '<span class="json-markup-string">"' + escape(obj.toISOString()) + '"</span>'
 
                     case 'maybe_datenum':
-                        return '<span class="json-markup-number">' + obj + '</span>' + ',<a style="color: #607D8B"> // Maybe date: ' + tfmt(new Date(obj)) + '</a>'
+                        return '<span class="json-markup-number">' + obj + '</span>' +
+                            ',<a style="color: #607D8B"> // Maybe date: ' + tfmt(new Date(obj)) + '</a>'
 
                     case 'null':
                         return '<span ' + style('json-markup-null') + '>null</span>'
 
                     case 'string':
-                        return '<span ' + style('json-markup-string') + '>"' + escape(obj.replace(/\n/g, '\n' + indent)) + '"</span>'
+                        return '<span ' + style('json-markup-string') + '>"' + escape(obj.replace(/\n/g, '\n' + indent)) +
+                            '"</span>'
 
                     case 'link':
-                        return '<span ' + style('json-markup-string') + '>"<a href="' + escape(obj) + '">' + escape(obj) + '</a>"</span>'
+                        return '<span ' + style('json-markup-string') + '>"<a href="' + escape(obj) + '">' + escape(obj) +
+                            '</a>"</span>'
 
                     case 'array':
                         return forEach(obj, '[', ']', visit)
@@ -156,11 +159,14 @@ Licensed under LGPLv3 -->
                             if (emitter != null) {
                                 var eresult = emitter(key, obj[key]);
                                 if (eresult == '')
-                                    return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(obj[key])
+                                    return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' +
+                                        visit(obj[key])
                                 else
-                                    return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(obj[key]) + ', <a style="color: #607D8B">// ' + eresult + '</a>'
+                                    return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' +
+                                        visit(obj[key]) + ', <a style="color: #607D8B">// ' + eresult + '</a>'
                             } else {
-                                return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(obj[key])
+                                return '<span ' + style('json-markup-key') + '>"' + key + '":</span> ' + visit(
+                                    obj[key])
                             }
                         })
                 }
@@ -178,7 +184,12 @@ Licensed under LGPLv3 -->
         var $$ = mdui.JQ;
         localStorage['page'] = localStorage['page'] || 25
         localStorage['cate'] = localStorage['cate'] || 'scratch'
-        function s(set) { localStorage['cate'] = set; $$('#title')[0].text = "作品目录" + "（" + set + "）" }
+
+        function s(set) {
+            localStorage['cate'] = set;
+            $$('#title')[0].text = "作品目录" + "（" + set + "）"
+        }
+
         function getQueryParams(qs) {
             qs = qs.split('+').join(' ');
 
@@ -256,6 +267,7 @@ Licensed under LGPLv3 -->
             else
                 return 1
         }
+
         function getSidLogo(sid) {
             if (sid == '1')
                 return '🐱'
@@ -268,8 +280,10 @@ Licensed under LGPLv3 -->
             else
                 return '❓'
         }
+
         function tfmt(date) {
-            return date.getFullYear() + " 年 " + (date.getMonth() + 1) + " 月 " + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds()
+            return date.getFullYear() + " 年 " + (date.getMonth() + 1) + " 月 " + date.getDate() + " " + date.getHours() +
+                ":" + date.getMinutes() + ":" + date.getSeconds()
         }
         // should use dark style from 19:00 to 6:00
         function shouldApplyDarkStyle() {
@@ -299,6 +313,7 @@ Licensed under LGPLv3 -->
 
         // main list API client
         var api = 'https://all-dream.com/rest/share/list'
+
         function rlist(page, fun) {
             var size = localStorage['page']
             var cate = localStorage['cate']
@@ -316,7 +331,8 @@ Licensed under LGPLv3 -->
                 success: function (data) {
                     fun(JSON.parse(data));
                     end_time = new Date()
-                    console.log("Finished at " + end_time + " in " + (end_time - start_time) + "ms (size is " + localStorage['page'] + ")")
+                    console.log("Finished at " + end_time + " in " + (end_time - start_time) +
+                        "ms (size is " + localStorage['page'] + ")")
                 }
             });
         }
@@ -326,7 +342,9 @@ Licensed under LGPLv3 -->
             // xhr: XMLHttpRequest 对象
             // options: AJAX 请求的配置参数
             mdui.snackbar("从远端拉取数据失败：" + (xhr.statusText == '' ? '未知原因' : xhr.statusText), {
-                timeout: 1000, buttonText: '详细信息', onClick: function () {
+                timeout: 1000,
+                buttonText: '详细信息',
+                onClick: function () {
                     setlist(xhr.toSource());
                 }
             });
@@ -353,6 +371,7 @@ Licensed under LGPLv3 -->
 
         // Billboard type 1 -> gold, 2 -> gem
         var bill_api = 'https://all-dream.com/rest/shareUserInfo/list'
+
         function rlist_billboard(type, fun) {
             var size = localStorage['page']
             $$.ajax({
@@ -369,6 +388,7 @@ Licensed under LGPLv3 -->
 
         // Query shared messages
         var mesg_api = 'https://all-dream.com/rest/shareRecentMessage/list'
+
         function rlist_msg(fun) {
             var size = localStorage['page']
             $$.ajax({
@@ -385,6 +405,7 @@ Licensed under LGPLv3 -->
         // Query user information
         // 考虑到 User ID 是不包含特殊符号的哈希值，不需要 escape 了，但实际生产中不建议这么做（XD
         var uq_api = 'https://all-dream.com/rest/student/info?studentId=xxxx'
+
         function ruser(id, fun) {
             $$.ajax({
                 method: 'POST',
@@ -394,6 +415,7 @@ Licensed under LGPLv3 -->
         }
 
         var pq_api = 'https://all-dream.com/rest/share/queryById?id=xxxx'
+
         function rproj(id, fun) {
             $$.ajax({
                 method: 'POST',
@@ -411,47 +433,65 @@ Licensed under LGPLv3 -->
         pplist = mixture(setlist, ppJson)
 
         // cancel dialog
-        function mdui_cancel(t, d) { d.close(); }
+        function mdui_cancel(t, d) {
+            d.close();
+        }
 
         // JSON pp based util views
         function uid_view() {
             alert_title.close();
             mdui.prompt("请输入要查询的 UID（Like <em>d21ad8f718264854a4dee4dc4a11badd</em>）", function (t, d) {
-                ruser(t, function (d) { pplist(d) });
-            }, mdui_cancel, { confirmOnEnter: true });
+                ruser(t, function (d) {
+                    pplist(d)
+                });
+            }, mdui_cancel, {
+                confirmOnEnter: true
+            });
         }
 
         function share_view() {
             alert_title.close();
             mdui.prompt("请输入要查询的 SID（Like <em>bb2de65d43fb4a9e82ce460b7c830d67</em>）", function (t, d) {
-                rproj(t, function (d) { pplist(d) });
-            }, mdui_cancel, { confirmOnEnter: true });
+                rproj(t, function (d) {
+                    pplist(d)
+                });
+            }, mdui_cancel, {
+                confirmOnEnter: true
+            });
         }
 
         function gem_view() {
             if (typeof alert_title != 'undefined')
                 alert_title.close();
             // mdui.snackbar("Work In Progress")
-            rlist_billboard(1, function (d) { pplist(d) });
+            rlist_billboard(1, function (d) {
+                pplist(d)
+            });
         }
 
         function gold_view() {
             if (typeof alert_title != 'undefined')
                 alert_title.close();
             // mdui.snackbar("Work In Progress");
-            rlist_billboard(2, function (d) { pplist(d) });
+            rlist_billboard(2, function (d) {
+                pplist(d)
+            });
         }
 
         function slist_view() {
             if (typeof alert_title != 'undefined')
                 alert_title.close();
-            rlist_msg(function (d) { pplist(d) });
+            rlist_msg(function (d) {
+                pplist(d)
+            });
         }
 
         function mlist_view() {
             if (typeof alert_title != 'undefined')
                 alert_title.close();
-            rlist(pageNum, function (d) { pplist(d) });
+            rlist(pageNum, function (d) {
+                pplist(d)
+            });
         }
 
         // Remove ALL plugins!
@@ -470,18 +510,30 @@ Licensed under LGPLv3 -->
                 var n = Number(t)
                 if (n != 0 && !Number.isNaN(n)) {
                     localStorage['page'] = n
-                    mdui.snackbar("你设置了新每页项目数：" + n, { buttonText: 'undo', onButtonClick: function () { localStorage['page'] = old_num } })
-                } else { mdui.snackbar("不能设置为 0，请不要填为空") }
+                    mdui.snackbar("你设置了新每页项目数：" + n, {
+                        buttonText: 'undo',
+                        onButtonClick: function () {
+                            localStorage['page'] = old_num
+                        }
+                    })
+                } else {
+                    mdui.snackbar("不能设置为 0，请不要填为空")
+                }
             }
             var cancel = function (t, d) {
                 d.close()
             }
-            diag_pagnum = mdui.prompt("请输入每页显示项目数（当前 " + localStorage['page'] + " 项/页）", pagnum_ok, cancel, { confirmOnEnter: true })
+            diag_pagnum = mdui.prompt("请输入每页显示项目数（当前 " + localStorage['page'] + " 项/页）", pagnum_ok, cancel, {
+                confirmOnEnter: true
+            })
         }
 
-        var toolset = "<p><div class=\"mdui-typo\"><h5>查询小工具：</h5><p>根据 <em>UID</em> 获取用户详细信息 <a onclick=\"uid_view()\">👤</a><p>根据 <em>SID</em> 获取分享信息 <a onclick=\"share_view()\">📄</a><p>查询宝石榜 <a onclick=\"gem_view()\">💎</a><p>查询金币榜 <a onclick=\"gold_view()\">🔑</a><p>查询分享消息 <a onclick=\"slist_view()\">🎉</a><p>检查分享列表源代码 <a onclick=\"mlist_view()\">📟</a><p>移除所有插件 <a onclick=\"remove_plugins()\">🔌</a><p>这是由 <a href=\"https://t.me/duangsuse\">duangsuse</a> 开发的 <a href=\"https://all-dream.com\">傲梦</a> 分享项目数据查询工具，以 <strong>GNU LGPL-3.0</strong> 共享协议开放源代码<p><small>感谢 <strong>MDUI、download.js、Masonry</strong> 提供的部分特性支持<p><em>另外，请注意，查询工具作为附属组件，不受技术支持</em></small></div><div>"
+        var toolset =
+            "<p><div class=\"mdui-typo\"><h5>查询小工具：</h5><p>根据 <em>UID</em> 获取用户详细信息 <a onclick=\"uid_view()\">👤</a><p>根据 <em>SID</em> 获取分享信息 <a onclick=\"share_view()\">📄</a><p>查询宝石榜 <a onclick=\"gem_view()\">💎</a><p>查询金币榜 <a onclick=\"gold_view()\">🔑</a><p>查询分享消息 <a onclick=\"slist_view()\">🎉</a><p>检查分享列表源代码 <a onclick=\"mlist_view()\">📟</a><p>移除所有插件 <a onclick=\"remove_plugins()\">🔌</a><p>这是由 <a href=\"https://t.me/duangsuse\">duangsuse</a> 开发的 <a href=\"https://all-dream.com\">傲梦</a> 分享项目数据查询工具，以 <strong>GNU LGPL-3.0</strong> 共享协议开放源代码<p><small>感谢 <strong>MDUI、download.js、Masonry</strong> 提供的部分特性支持<p><em>另外，请注意，查询工具作为附属组件，不受技术支持</em></small></div><div>"
         for (var ipc = 0; ipc < plugins.length; ipc++) {
-            toolset += '<p>' + plugins[ipc].menu + ' <a onclick="dslInterpreter(eval(\'JSON.parse(localStorage[\\\'plugins\\\'])[' + ipc + '].script\'), DSL_ON_MENU)">' + plugins[ipc].link + '</a>'
+            toolset += '<p>' + plugins[ipc].menu +
+                ' <a onclick="dslInterpreter(eval(\'JSON.parse(localStorage[\\\'plugins\\\'])[' + ipc +
+                '].script\'), DSL_ON_MENU)">' + plugins[ipc].link + '</a>'
         }
         toolset += '</div>'
         // Menu
@@ -491,7 +543,12 @@ Licensed under LGPLv3 -->
                 url: 'https://all-dream.com/rest/share/queryCount',
                 success: function (data) {
                     var obj = JSON.parse(data)
-                    alert_title = mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] + "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" + obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] + "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个<p><small>你安装有 <code>" + plugins.length + "</code> 个插件，当前在第 <code>" + pageNum + "</code> 页</small></a>" + toolset);
+                    alert_title = mdui.alert("<a class=\"mdui-typo\">总共有 <code>" + obj['total'] +
+                        "</code> 个作品，其中 Scaratch <code>" + obj['SB2Count'] + "</code> 个，TJS <code>" +
+                        obj['JSCount'] + "</code> 个，思维导图 <code>" + obj['mindMappingCount'] +
+                        "</code> 个，推荐 <code>" + obj['promote'] + "</code> 个<p><small>你安装有 <code>" +
+                        plugins.length + "</code> 个插件，当前在第 <code>" + pageNum +
+                        "</code> 页</small></a>" + toolset);
                 }
             });
         }
@@ -507,25 +564,47 @@ Licensed under LGPLv3 -->
             var start_time2 = new Date()
             rlist(pageNum, function (d) {
                 grab_snack.close()
-                mdui.snackbar("成功从远端获得列表，用时 " + (new Date() - start_time2) / 1000 + " 秒", { timeout: 500 })
+                mdui.snackbar("成功从远端获得列表，用时 " + (new Date() - start_time2) / 1000 + " 秒", {
+                    timeout: 500
+                })
                 var buf = ""
                 if (Object.keys(d['list']).length == 0)
                     if (pageNum != 0)
-                        mdui.snackbar("注意，我们貌似获得了一个空列表，可能是页面索引超过了实际上的最后一页", { timeout: 2500, buttonText: 'get back', onButtonClick: function () { pageNum = 0 } });
+                        mdui.snackbar("注意，我们貌似获得了一个空列表，可能是页面索引超过了实际上的最后一页", {
+                            timeout: 2500,
+                            buttonText: 'get back',
+                            onButtonClick: function () {
+                                pageNum = 0
+                            }
+                        });
                     else
-                        mdui.snackbar("注意，我们貌似获得了一个空列表，请检查参数（如分类）是否正确", { timeout: 2000 });
+                        mdui.snackbar("注意，我们貌似获得了一个空列表，请检查参数（如分类）是否正确", {
+                            timeout: 2000
+                        });
                 for (var k in d['list']) {
                     var v = d['list'][k]
                     // console.log(v)
                     bin[k] = v
-                    item = fill('https://all-dream.com/' + v['coverUrl'], (v['courseTypeName'] == null ? '无课程分类' : v['courseTypeName']) + ' - ' + v['name'] + '（' + (v['grade'] == null ? '无学级' : v['grade']) + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] + ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v['visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v['shareContent'], "window.location='https://all-dream.com/'+bin[" + k + "]['fileUrl']", "tmp=bin[" + k + "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')", offical_prefix + v['id'])
+                    item = fill('https://all-dream.com/' + v['coverUrl'], (v['courseTypeName'] == null ?
+                            '无课程分类' : v['courseTypeName']) + ' - ' + v['name'] + '（' + (v['grade'] ==
+                            null ? '无学级' : v['grade']) + '）', v['shareTitle'] + ' | ⭐️ ' + v['star'] +
+                        ' 📝 ' + v['score'] + ' 🕐 ' + tfmt(new Date(v['createTime'])) + ' 👁 ' + v[
+                            'visit'] + ' 💎 ' + v['gold'] + ' | ' + (v['promote'] == 1 ? '👍' : '') + (
+                            v['sex'] == '1' ? '👦🏻' : '👧🏻') + getSidLogo(v['shareType']), v[
+                            'shareContent'], "window.location='https://all-dream.com/'+bin[" + k +
+                        "]['fileUrl']", "tmp=bin[" + k +
+                        "];download(JSON.stringify(tmp),'json_'+tmp['shareTitle']+'_'+tmp['name'],'application/json')",
+                        offical_prefix + v['id'])
                     buf += wrap(item)
                 }
                 setlist(buf);
 
                 if (Object.keys(d['list']).length != 0)
                     $$.showOverlay();
-                $$.throttle(function () { refresh_mash(); $$.hideOverlay(); }, 1000)();
+                $$.throttle(function () {
+                    refresh_mash();
+                    $$.hideOverlay();
+                }, 1000)();
 
                 // F**king mash
                 $$.throttle(refresh_mash, 2000)();
@@ -552,7 +631,9 @@ Licensed under LGPLv3 -->
         autodark();
 
         // Support for hotkeys
-        function do_refresh() { $$('#refresh').trigger('click') }
+        function do_refresh() {
+            $$('#refresh').trigger('click')
+        }
         document.onkeyup = function (k) {
             // Enter to refresh
             if (k.code == 'Enter') {
@@ -589,7 +670,9 @@ Licensed under LGPLv3 -->
 
     <script>
         // Fill MDUI card view template
-        var template = '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-btn-raised"><i class="mdui-icon mdui-icon-left material-icons">file_download</i> 下载</button><button onclick="@a2@" class="mdui-btn mdui-btn-raised mdui-ripple"><i class="mdui-icon mdui-icon-left material-icons">info_outline</i> 源数据</button><a href="@a3@" class="mdui-float-right mdui-btn mdui-btn-raised mdui-btn-icon mdui-ripple"><i class="mdui-icon material-icons">insert_link</i></a></div></div>'
+        var template =
+            '<div class="mdui-card"><div class="mdui-card-media"><img src="@img@"/></div><div class="mdui-card-primary"><div class="mdui-card-primary-title">@title@</div><div class="mdui-card-primary-subtitle">@subtitle@</div></div><div class="mdui-card-content">@desc@</div><div class="mdui-card-actions"><button onclick="@a1@" class="mdui-btn mdui-ripple mdui-color-theme-accent mdui-btn-raised"><i class="mdui-icon mdui-icon-left material-icons">file_download</i> 下载</button><button onclick="@a2@" class="mdui-btn mdui-btn-raised mdui-ripple"><i class="mdui-icon mdui-icon-left material-icons">info_outline</i> 源数据</button><a href="@a3@" class="mdui-float-right mdui-btn mdui-btn-raised mdui-btn-icon mdui-ripple"><i class="mdui-icon material-icons">insert_link</i></a></div></div>'
+
         function fill(img, title, subt, desc, a1, a2, a3) {
             return template.replace('@img@', img)
                 .replace('@title@', title)
@@ -621,12 +704,16 @@ Licensed under LGPLv3 -->
         // URL handlers
         function show_user(uid) {
             console.log("Show user JSON: " + uid)
-            ruser(uid, function (d) { pplist(d) });
+            ruser(uid, function (d) {
+                pplist(d)
+            });
         }
 
         function show_share(sid) {
             console.log("Show share JSON: " + sid)
-            rproj(sid, function (d) { pplist(d) });
+            rproj(sid, function (d) {
+                pplist(d)
+            });
         }
 
         function show_list() {
@@ -664,11 +751,15 @@ Licensed under LGPLv3 -->
         function pluginify(gist_id) {
             console.log("PluginInstall: Gist#" + gist_id)
             if (typeof gist_id == 'undefined') {
-                mdui.snackbar("Plugin-install 需要接受 gist_id 参数", { timeout: 2000 })
+                mdui.snackbar("Plugin-install 需要接受 gist_id 参数", {
+                    timeout: 2000
+                })
                 return;
             }
             var target_plugin = {} // Create POM
-            var gh_fetch_bar = mdui.snackbar("正在从 GitHub 拉取插件信息...", { timeout: 7000 });
+            var gh_fetch_bar = mdui.snackbar("正在从 GitHub 拉取插件信息...", {
+                timeout: 7000
+            });
             $$.ajax({
                 method: 'GET',
                 url: github_gist_api + gist_id,
@@ -701,20 +792,33 @@ Licensed under LGPLv3 -->
                     }
                     gh_fetch_bar.close()
                     console.log("InstallPlugin: " + p_id + p_author + p_desc + p_menu + p_link + p_script)
-                    mdui.confirm("<div class=\"mdui-typo\">真的要安装来自 " + p_author + "（GitHub 帐号 " + ghson_parsed['owner']['login'] + "） 的插件 <a href=\"" + "https://gist.github.com/" + gist_id + '">' + p_id + "</a> 吗？<p><h5><strong>插件描述</strong></h5><p>" + p_desc + "<p><small><em>如果你不明白你在做什么，请不要添加插件</em></small></div>", function (d) {
-                        target_plugin.id = p_id
-                        target_plugin.author = p_author
-                        target_plugin.description = p_desc
-                        target_plugin.menu = p_menu
-                        target_plugin.link = p_link
-                        target_plugin.script = p_script
-                        // Install plugin now
-                        plugins.push(target_plugin)
-                        localStorage['plugins'] = JSON.stringify(plugins)
-                        d.close();
-                        mdui.snackbar("已经安装插件 <strong>" + p_id + "</strong> 刷新以启用", { timeout: 3000 });
-                        dslInterpreter(p_script, DSL_ON_INSTALL)
-                    }, function (d) { d.close(); gh_fetch_bar.close() }, { confirmOnEnter: true })
+                    mdui.confirm("<div class=\"mdui-typo\">真的要安装来自 " + p_author + "（GitHub 帐号 " +
+                        ghson_parsed['owner']['login'] + "） 的插件 <a href=\"" +
+                        "https://gist.github.com/" + gist_id + '">' + p_id +
+                        "</a> 吗？<p><h5><strong>插件描述</strong></h5><p>" + p_desc +
+                        "<p><small><em>如果你不明白你在做什么，请不要添加插件</em></small></div>",
+                        function (d) {
+                            target_plugin.id = p_id
+                            target_plugin.author = p_author
+                            target_plugin.description = p_desc
+                            target_plugin.menu = p_menu
+                            target_plugin.link = p_link
+                            target_plugin.script = p_script
+                            // Install plugin now
+                            plugins.push(target_plugin)
+                            localStorage['plugins'] = JSON.stringify(plugins)
+                            d.close();
+                            mdui.snackbar("已经安装插件 <strong>" + p_id + "</strong> 刷新以启用", {
+                                timeout: 3000
+                            });
+                            dslInterpreter(p_script, DSL_ON_INSTALL)
+                        },
+                        function (d) {
+                            d.close();
+                            gh_fetch_bar.close()
+                        }, {
+                            confirmOnEnter: true
+                        })
                 }
             });
         }
@@ -733,27 +837,39 @@ Licensed under LGPLv3 -->
             try {
                 switch (invokeType) {
                     case DSL_ON_INITIALIZE:
-                        efun = eval(code); efun('initialize');
+                        efun = eval(code);
+                        efun('initialize');
                         break
                     case DSL_ON_MENU:
-                        efun = eval(code); efun('on_menu');
+                        efun = eval(code);
+                        efun('on_menu');
                         break
                     case DSL_ON_URL:
-                        efun = eval(code); efun('on_url');
+                        efun = eval(code);
+                        efun('on_url');
                         break
                     case DSL_ON_INSTALL:
-                        efun = eval(code); efun('install');
+                        efun = eval(code);
+                        efun('install');
                         break
                     default:
-                        mdui.snackbar("插件系统错误：dsl 解释器无法理解 invokeType: " + invokeType, { timeout: 3000 });
+                        mdui.snackbar("插件系统错误：dsl 解释器无法理解 invokeType: " + invokeType, {
+                            timeout: 3000
+                        });
                 }
             } catch (error) {
                 if (error instanceof SyntaxError) {
-                    mdui.snackbar("插件系统错误：dsl 解释器无法理解代码: " + error.message, { timeout: 4000 });
+                    mdui.snackbar("插件系统错误：dsl 解释器无法理解代码: " + error.message, {
+                        timeout: 4000
+                    });
                 } else if (error instanceof TypeError) {
-                    mdui.snackbar("插件系统错误：dsl 解释器类型: " + error.message, { timeout: 4500 });
+                    mdui.snackbar("插件系统错误：dsl 解释器类型: " + error.message, {
+                        timeout: 4500
+                    });
                 } else {
-                    mdui.snackbar("插件系统错误：" + error.toString(), { timeout: 4000 });
+                    mdui.snackbar("插件系统错误：" + error.toString(), {
+                        timeout: 4000
+                    });
                 }
             }
         }
@@ -778,7 +894,9 @@ Licensed under LGPLv3 -->
         // plugin link text
         // plugin script
 
-        plugins.forEach(function (p) { dslInterpreter(p.script, DSL_ON_INITIALIZE) })
+        plugins.forEach(function (p) {
+            dslInterpreter(p.script, DSL_ON_INITIALIZE)
+        })
         // dslInterpreter(p.script, DSL_ON_INITIALIZE)
 
         // URL Param support
