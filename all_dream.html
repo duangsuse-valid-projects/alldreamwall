@@ -712,7 +712,7 @@ Licensed under LGPLv3 -->
                         d.close();
                         mdui.snackbar("已经安装插件 <strong>" + p_id + "</strong> 刷新以启用", { timeout: 3000 });
                         dslInterpreter(p_script, DSL_ON_INSTALL)
-                    }, function (d) { d.close(); gh_fetch_bar() }, { confirmOnEnter: true })
+                    }, function (d) { d.close(); gh_fetch_bar.close() }, { confirmOnEnter: true })
                 }
             });
         }
