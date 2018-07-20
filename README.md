@@ -16,6 +16,7 @@
 + 下载文件和 JSON 裸数据（基于 download.js）
 + 快捷键，`Enter` for refresh，`<-/->` decreast/increase page no., `m` for count menu, `t` for rows per page, `c` for categories menu
 + 支持生成官方前端项目链接
++ 插件系统：方便可扩展的插件系统，支持 JSON comment emitter、URL action handler
 
 ## 用到的库 | Used libraries
 
@@ -50,8 +51,8 @@ AllDreamWall 使用 `type` url 参数确认要执行的动作类型
 + source - 可以使用参数 __page__, __rows__ [e.g.](https://popf.rip/all_dream.html?type=source&rows=1)
 + bill_gem / bill_gold - 可以使用参数 __page__, __rows__ [e.g.](https://popf.rip/all_dream.html?type=bill_gold&page=2)
 + list - 可以使用参数 __page__, __rows__, __category__ [e.g.](https://popf.rip/all_dream.html?type=list&page=2&category=recommended)
-+ show_about - 无参数
-+ plugin - 可以使用参数 __gist_id__
++ show_about - 无参数 [e.g.](https://popf.rip/all_dream.html?type=show_about)
++ plugin - 可以使用参数 __gist_id__ [e.g.](https://popf.rip/all_dream.html?type=plugin&gist_id=f576da3db8a7563130411d950f4110c1)
 
 ## 截图 | Shots
 
