@@ -568,19 +568,6 @@ Licensed under LGPLv3 -->
                     timeout: 500
                 })
                 var buf = ""
-                if (Object.keys(d['list']).length == 0)
-                    if (pageNum != 0)
-                        mdui.snackbar("注意，我们貌似获得了一个空列表，可能是页面索引超过了实际上的最后一页", {
-                            timeout: 2500,
-                            buttonText: 'get back',
-                            onButtonClick: function () {
-                                pageNum = 0
-                            }
-                        });
-                    else
-                        mdui.snackbar("注意，我们貌似获得了一个空列表，请检查参数（如分类）是否正确", {
-                            timeout: 2000
-                        });
                 for (var k in d['list']) {
                     var v = d['list'][k]
                     // console.log(v)
@@ -599,8 +586,7 @@ Licensed under LGPLv3 -->
                 }
                 setlist(buf);
 
-                if (Object.keys(d['list']).length != 0)
-                    $$.showOverlay();
+                $$.showOverlay();
                 $$.throttle(function () {
                     refresh_mash();
                     $$.hideOverlay();
@@ -617,6 +603,20 @@ Licensed under LGPLv3 -->
                 $$.throttle(refresh_mash, 40000)();
                 $$.throttle(refresh_mash, 60000)();
                 $$.throttle(refresh_mash, 65000)();
+
+                if (Object.keys(d['list']).length == 0)
+                    if (pageNum != 0)
+                        mdui.snackbar("注意，我们貌似获得了一个空列表，可能是页面索引超过了实际上的最后一页", {
+                            timeout: 2500,
+                            buttonText: 'get back',
+                            onButtonClick: function () {
+                                pageNum = 0
+                            }
+                        });
+                    else
+                        mdui.snackbar("注意，我们貌似获得了一个空列表，请检查参数（如分类）是否正确", {
+                            timeout: 2000
+                        });
 
                 // 给了我代码运行很快的错觉
                 var tmp_pagesize = localStorage['page']
