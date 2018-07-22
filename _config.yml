@@ -1,1 +1,30 @@
 theme: jekyll-theme-architect
+
+name: AllDreanWall • Extendable All-Dream API Client
+title: 傲梦平台客户端
+description:很惭愧，只做了一点微小的工作
+url: https://popf.rip
+repository: https://github.com/duangsuse/alldreamwall
+timezone: Asia/Shanghai
+logo: "https://all-dream.com/favicon.ico"
+
+author:
+  name: duangsuse
+  url: https://geekapk.org/web/?type=user&name=duangsuse
+
+# locale: "zh_CN"
+
+show_downloads: true
+
+github:
+  zip_url: https://github.com/duangsuse/alldreamwall/releases
+  html_url: https://github.com/duangsuse/alldreamwall/releases/download/2.0/AllDream.html
+
+plugins:
+- jekyll-seo-tag
+
+exclude:
+- ".gitignore"
+- CNAME
+- "README.md"
+- LICENSE
